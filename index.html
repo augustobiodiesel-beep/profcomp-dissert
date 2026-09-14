@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel PROFCOMP</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">
+tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "secondary-fixed": "#dbe1ff", "surface-container-low": "#eff4ff", "primary": "#00152f", "primary-container": "#0f2a4a", "tertiary-fixed": "#85f8c4", "surface-bright": "#f8f9ff", "tertiary-container": "#00301f", "tertiary": "#00190e", "on-secondary-fixed-variant": "#003ea8", "on-primary-fixed": "#001c3a", "surface-container-lowest": "#ffffff", "error": "#ba1a1a", "outline-variant": "#c4c6cf", "on-tertiary-fixed": "#002114", "on-error-container": "#93000a", "inverse-on-surface": "#ebf1ff", "inverse-surface": "#233144", "surface-container-high": "#dde9ff", "on-surface": "#0d1c2f", "primary-fixed-dim": "#b0c8f0", "secondary-container": "#316bf3", "inverse-primary": "#b0c8f0", "background": "#f8f9ff", "surface-container": "#e6eeff", "on-secondary-fixed": "#00174b", "surface-dim": "#ccdbf4", "on-error": "#ffffff", "on-primary": "#ffffff", "surface-tint": "#485f82", "on-secondary-container": "#fefcff", "on-tertiary-fixed-variant": "#005137", "surface-container-highest": "#d5e3fd", "error-container": "#ffdad6", "on-background": "#0d1c2f", "on-tertiary-container": "#24a375", "surface": "#f8f9ff", "secondary": "#0051d5", "tertiary-fixed-dim": "#68dba9", "primary-fixed": "#d4e3ff", "on-secondary": "#ffffff", "on-surface-variant": "#43474e", "on-primary-container": "#7a92b7", "outline": "#74777f", "surface-variant": "#d5e3fd", "on-primary-fixed-variant": "#304869", "on-tertiary": "#ffffff", "secondary-fixed-dim": "#b4c5ff" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-sm": "0.5rem", "space-md": "1rem", "margin": "2rem", "gutter": "1.5rem", "space-xs": "0.25rem", "space-lg": "1.5rem", "space-xl": "2.5rem" }, "fontFamily": { "label-code": ["JetBrains Mono"], "label-tag": ["Hanken Grotesk"], "headline-md": ["Hanken Grotesk"], "body-lg": ["\"Source Sans 3\""], "headline-lg": ["Hanken Grotesk"], "body-sm": ["\"Source Sans 3\""], "headline-sm": ["Hanken Grotesk"], "body-md": ["\"Source Sans 3\""], "caption": ["\"Source Sans 3\""] }, "fontSize": { "label-code": ["13px", { "lineHeight": "18px", "fontWeight": "500" }], "label-tag": ["12px", { "lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "600" }], "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }], "headline-lg": ["30px", { "lineHeight": "38px", "fontWeight": "600" }], "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-sm": ["19px", { "lineHeight": "26px", "fontWeight": "600" }], "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }], "caption": ["11px", { "lineHeight": "16px", "fontWeight": "500" }] } } } };
+</script>
+<style>
+  html,body{margin:0;padding:0;}
+  ::-webkit-scrollbar{width:8px;height:8px;}
+  ::-webkit-scrollbar-thumb{background:#c4c6cf;border-radius:8px;}
+  @media (max-width: 767px){
+    #sidebar{ transform: translateX(-100%); transition: transform .2s ease; }
+    #sidebar.open{ transform: translateX(0); }
+    #app-shell{ padding-left: 0 !important; }
+    header{ left: 0 !important; }
+  }
+</style>
+</head>
+<body class="bg-background font-body-md text-on-surface min-h-screen antialiased">
+
+<aside id="sidebar" class="fixed left-0 top-0 h-full w-72 bg-surface-container-low z-40 overflow-y-auto shadow-[0_1px_8px_rgba(0,0,0,0.08)]">
+  <div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-lowest/70">
+    <span class="material-symbols-outlined text-primary text-3xl">school</span>
+    <div class="flex flex-col min-w-0 leading-tight">
+      <span class="font-headline-sm text-headline-sm text-primary">PROFCOMP</span>
+      <span class="font-caption text-caption text-on-surface-variant uppercase tracking-wider">Mestrado Profissional UFMA</span>
+    </div>
+  </div>
+  <nav class="p-space-sm space-y-1" id="nav">
+    <button data-path="dashboard" title="Ver o painel geral: metas, indicadores e artigos recentes." class="nav-btn w-full text-left flex items-center gap-space-sm px-space-sm py-space-sm rounded-xl transition-colors">
+      <span class="material-symbols-outlined text-xl">dashboard</span>
+      <span class="font-label-tag text-label-tag">Dashboard &amp; Panorama</span>
+    </button>
+    <button data-path="biblioteca" title="Listar, buscar, cadastrar e editar o fichamento de cada artigo." class="nav-btn w-full text-left flex items-center gap-space-sm px-space-sm py-space-sm rounded-xl transition-colors">
+      <span class="material-symbols-outlined text-xl">local_library</span>
+      <span class="font-label-tag text-label-tag">Biblioteca &amp; Fichamento</span>
+    </button>
+    <button data-path="matriz" title="Vincular requisitos do produto às evidências da literatura." class="nav-btn w-full text-left flex items-center gap-space-sm px-space-sm py-space-sm rounded-xl transition-colors">
+      <span class="material-symbols-outlined text-xl">schema</span>
+      <span class="font-label-tag text-label-tag">Matriz do Produto</span>
+    </button>
+    <button data-path="sintese" title="Gerar as referências em ABNT e BibTeX a partir dos artigos cadastrados." class="nav-btn w-full text-left flex items-center gap-space-sm px-space-sm py-space-sm rounded-xl transition-colors">
+      <span class="material-symbols-outlined text-xl">history_edu</span>
+      <span class="font-label-tag text-label-tag">Síntese &amp; Dissertação</span>
+    </button>
+  </nav>
+  <div class="p-space-md space-y-1">
+    <button id="btn-export-json" title="Baixa um arquivo .json com todos os seus artigos e requisitos. Leve esse arquivo para outro aparelho (e-mail, nuvem, pendrive) e use &quot;Importar backup&quot; lá para continuar com os mesmos dados." class="w-full text-left font-caption text-caption text-secondary hover:underline block">Exportar backup (.json)</button>
+    <button id="btn-import-json" title="Carrega um arquivo .json exportado deste app em outro aparelho, substituindo os dados atuais deste navegador pelos do arquivo." class="w-full text-left font-caption text-caption text-secondary hover:underline block">Importar backup (.json)</button>
+    <input type="file" id="import-file-input" accept="application/json" hidden>
+    <button id="btn-reset-data" title="Apaga todos os artigos e requisitos salvos neste navegador. Não pode ser desfeito — exporte um backup antes, se quiser guardar os dados." class="w-full text-left font-caption text-caption text-error hover:underline block">Apagar todos os dados locais</button>
+  </div>
+</aside>
+
+<div id="app-shell" class="pl-72">
+  <header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-30 px-gutter flex items-center gap-space-md">
+    <button id="btn-toggle-sidebar" title="Mostrar/ocultar o menu lateral" class="md:hidden p-1"><span class="material-symbols-outlined">menu</span></button>
+    <div class="relative flex-1 max-w-xl">
+      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg pointer-events-none">search</span>
+      <input id="global-search" title="Digite um termo e aperte Enter para buscar na Biblioteca" class="w-full bg-surface-container-low text-on-surface placeholder:text-on-surface-variant font-body-sm text-body-sm pl-9 pr-3 py-space-xs rounded-xl focus:outline-none focus:bg-surface-container-lowest transition-all" placeholder="Buscar na Biblioteca (Enter)" type="search">
+    </div>
+    <span id="storage-status" class="font-caption text-caption text-on-surface-variant hidden sm:inline" title="Onde seus dados estão sendo guardados.">Verificando...</span>
+  </header>
+
+  <main class="pt-16 bg-surface w-full px-gutter min-h-screen pb-space-xl">
+
+    <!-- ================= DASHBOARD ================= -->
+    <section id="section-dashboard" class="py-space-md">
+      <div class="rounded-xl overflow-hidden bg-gradient-to-r from-primary via-primary-container to-secondary p-space-lg text-on-primary my-space-md">
+        <h1 class="font-headline-lg text-headline-lg font-bold">Panorama da Revisão</h1>
+        <p class="font-body-md text-body-md text-surface-container-high/90 mt-1">Visão geral do referencial teórico e da matriz de rastreabilidade do produto.</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-space-md mb-space-lg" id="kpi-grid"></div>
+      <div class="grid grid-cols-1 xl:grid-cols-3 gap-space-lg mb-space-lg">
+        <div class="xl:col-span-2 bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+          <h2 class="font-headline-sm text-headline-sm text-primary font-bold mb-space-sm">Distribuição por Qualis CAPES</h2>
+          <div id="qualis-list" class="space-y-space-sm"></div>
+        </div>
+        <div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-sm">
+          <h2 class="font-headline-sm text-headline-sm text-primary font-bold">Ações Rápidas</h2>
+          <button id="btn-new-artigo" title="Abrir o formulário para cadastrar um novo artigo e seu fichamento." class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-primary text-on-primary font-label-tag text-label-tag hover:bg-primary-container transition-colors">
+            <span class="material-symbols-outlined text-base">add</span> Novo Artigo
+          </button>
+          <button id="btn-import-bibtex" title="Abrir o formulário de novo artigo já com a opção de colar um BibTeX para preencher os campos automaticamente." class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-surface-container-low text-primary font-label-tag text-label-tag hover:bg-surface-container-high transition-colors">
+            <span class="material-symbols-outlined text-base">file_download</span> Importar via BibTeX
+          </button>
+          <button id="btn-export-resumo" title="Copiar um resumo em texto de todos os artigos para colar em e-mail ou mensagem ao orientador." class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-surface-container-low text-primary font-label-tag text-label-tag hover:bg-surface-container-high transition-colors">
+            <span class="material-symbols-outlined text-base">content_copy</span> Copiar Resumo p/ Orientador
+          </button>
+        </div>
+      </div>
+      <section class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden mb-space-lg">
+        <div class="p-space-md flex items-center justify-between">
+          <h2 class="font-headline-sm text-headline-sm text-primary font-bold">Artigos Recentes</h2>
+          <span class="font-caption text-caption text-on-surface-variant">últimos 5</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left font-body-sm text-body-sm">
+            <thead class="bg-surface-container-low font-caption text-caption text-on-surface-variant uppercase">
+              <tr><th class="py-space-sm px-space-md">Título</th><th class="py-space-sm px-space-sm">Ano</th><th class="py-space-sm px-space-sm">Qualis</th><th class="py-space-sm px-space-sm">Status</th><th class="py-space-sm px-space-md text-right">Ação</th></tr>
+            </thead>
+            <tbody id="recent-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <!-- ================= BIBLIOTECA ================= -->
+    <section id="section-biblioteca" class="py-space-md" hidden>
+      <div class="flex flex-wrap items-center justify-between gap-space-sm mb-space-md">
+        <h1 class="font-headline-lg text-headline-lg text-primary font-bold">Biblioteca &amp; Fichamento</h1>
+        <button id="btn-new-artigo-2" title="Abrir o formulário para cadastrar um novo artigo e seu fichamento." class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-primary text-on-primary font-label-tag text-label-tag hover:bg-primary-container transition-colors">
+          <span class="material-symbols-outlined text-base">add</span> Novo Artigo
+        </button>
+      </div>
+      <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm space-y-space-sm mb-space-md">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-space-sm">
+          <input id="bib-search" type="text" title="Filtra a lista por título, autor, síntese ou tag." placeholder="Filtrar por título, autor, tag..." class="md:col-span-2 bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm focus:outline-none">
+          <select id="bib-status" title="Filtrar por status de leitura." class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
+            <option value="all">Todos os status</option>
+            <option value="Fichado">Fichado</option>
+            <option value="Em Leitura">Em Leitura</option>
+            <option value="Não Lido">Não Lido</option>
+          </select>
+          <select id="bib-qualis" title="Filtrar por classificação Qualis CAPES." class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
+            <option value="all">Qualquer Qualis</option>
+          </select>
+        </div>
+        <div id="bib-tags" class="flex items-center gap-space-xs overflow-x-auto pb-1"></div>
+      </div>
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-space-md items-start">
+        <section class="xl:col-span-5 flex flex-col gap-space-sm" id="biblioteca-list-wrap">
+          <span class="font-label-tag text-label-tag text-on-surface-variant" id="bib-counter"></span>
+          <div id="biblioteca-list" class="flex flex-col gap-space-sm"></div>
+        </section>
+        <section class="xl:col-span-7" id="biblioteca-detail"></section>
+      </div>
+    </section>
+
+    <!-- ================= MATRIZ ================= -->
+    <section id="section-matriz" class="py-space-md" hidden>
+      <div class="flex flex-wrap items-center justify-between gap-space-md rounded-xl overflow-hidden bg-gradient-to-r from-primary via-primary-container to-secondary p-space-lg text-on-primary mb-space-lg">
+        <div>
+          <h1 class="font-headline-lg text-headline-lg font-bold">Matriz de Síntese: Teoria → Produto</h1>
+          <p class="font-body-md text-body-md text-surface-container-high/90 mt-1">Cada requisito do produto deve estar ancorado em evidência da literatura.</p>
+        </div>
+        <div class="flex items-center gap-space-md">
+          <div class="text-right">
+            <span class="font-caption text-caption text-surface-container-highest uppercase block">Cobertura</span>
+            <span class="font-headline-lg text-headline-lg font-bold" id="matriz-cobertura">—</span>
+          </div>
+          <button id="btn-add-vinculo" title="Cadastrar um novo requisito do produto e, se quiser, vinculá-lo a um artigo já fichado." class="inline-flex items-center gap-space-xs px-space-md py-space-sm bg-tertiary-container hover:bg-tertiary text-tertiary-fixed font-label-tag text-label-tag rounded-xl transition-all">
+            <span class="material-symbols-outlined text-lg">add_link</span> Nova Vinculação
+          </button>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 xl:grid-cols-4 gap-space-lg">
+        <div class="xl:col-span-1 bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-md h-fit">
+          <div>
+            <label class="font-label-tag text-caption uppercase text-on-surface-variant tracking-wider block mb-1">Buscar</label>
+            <input id="mtz-search" type="text" title="Buscar por código, título ou conceito do requisito." placeholder="Código, título, conceito..." class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm focus:outline-none">
+          </div>
+          <div>
+            <label class="font-label-tag text-caption uppercase text-on-surface-variant tracking-wider block mb-1">Módulo</label>
+            <div id="mtz-modulos" class="flex flex-col gap-1"></div>
+          </div>
+          <div>
+            <label class="font-label-tag text-caption uppercase text-on-surface-variant tracking-wider block mb-1">Tipo</label>
+            <div id="mtz-tipos" class="grid grid-cols-2 gap-1"></div>
+          </div>
+          <div>
+            <label class="font-label-tag text-caption uppercase text-on-surface-variant tracking-wider block mb-1">Status</label>
+            <div id="mtz-status" class="flex flex-col gap-1"></div>
+          </div>
+        </div>
+        <div class="xl:col-span-3 flex flex-col gap-space-md" id="matriz-list"></div>
+      </div>
+    </section>
+
+    <!-- ================= SINTESE ================= -->
+    <section id="section-sintese" class="py-space-md" hidden>
+      <h1 class="font-headline-lg text-headline-lg text-primary font-bold mb-space-md">Síntese &amp; Exportação Canônica</h1>
+      <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm">
+        <div class="flex items-center justify-between mb-space-md">
+          <div class="grid grid-cols-2 p-1 bg-surface-container rounded-lg gap-1 font-label-tag text-label-tag">
+            <button id="tab-btn-abnt" title="Mostrar as referências no formato ABNT NBR 6023." class="py-1.5 px-space-md rounded-md bg-surface-container-lowest text-primary font-bold shadow-xs">ABNT NBR 6023</button>
+            <button id="tab-btn-bibtex" title="Mostrar as referências no formato BibTeX, para LaTeX/Overleaf." class="py-1.5 px-space-md rounded-md text-on-surface-variant">BibTeX (LaTeX)</button>
+          </div>
+          <div class="flex items-center gap-space-xs">
+            <button id="btn-copy-export" title="Copiar todo o bloco de referências exibido para a área de transferência." class="inline-flex items-center gap-1 px-space-sm py-1 bg-surface-container-high hover:bg-surface-container text-primary rounded-lg font-label-tag text-caption">
+              <span class="material-symbols-outlined text-sm">content_copy</span> Copiar
+            </button>
+            <button id="btn-print-export" title="Abrir a janela de impressão do navegador para gerar um PDF das referências." class="inline-flex items-center gap-1 px-space-sm py-1 bg-surface-container-high hover:bg-surface-container text-primary rounded-lg font-label-tag text-caption">
+              <span class="material-symbols-outlined text-sm">print</span> Imprimir / PDF
+            </button>
+          </div>
+        </div>
+        <pre id="export-abnt" class="p-space-md bg-surface-container-low rounded-lg font-body-sm text-body-sm whitespace-pre-wrap leading-relaxed"></pre>
+        <pre id="export-bibtex" class="p-space-md bg-primary text-primary-fixed rounded-lg font-label-code text-label-code whitespace-pre-wrap leading-relaxed" hidden></pre>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ================= MODAL ARTIGO ================= -->
+<div id="modal-artigo" class="fixed inset-0 bg-primary/60 backdrop-blur-sm z-50 hidden items-center justify-center p-space-md overflow-y-auto">
+  <div class="bg-surface-container-lowest rounded-xl shadow-2xl max-w-2xl w-full p-space-lg my-space-lg space-y-space-sm">
+    <div class="flex items-center justify-between">
+      <h3 id="ma-title" class="font-headline-sm text-headline-sm text-primary font-bold">Novo Artigo</h3>
+      <button class="modal-close p-1 text-on-surface-variant hover:text-primary" data-modal="modal-artigo" title="Fechar sem salvar"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <details class="bg-surface-container-low rounded-lg p-space-sm">
+      <summary class="font-label-tag text-label-tag text-secondary cursor-pointer" title="Clique para abrir um campo onde você pode colar um BibTeX (ex: exportado do Google Scholar ou Mendeley) e preencher os campos abaixo automaticamente.">Colar BibTeX para preencher automaticamente</summary>
+      <textarea id="ma-bibtex-paste" rows="3" title="Cole aqui o texto de uma entrada BibTeX." class="w-full mt-space-xs bg-surface-container-lowest p-space-xs rounded font-label-code text-caption" placeholder="@article{chave2024, title={...}, author={...}, year={2024}, journal={...}}"></textarea>
+      <button id="ma-parse-btn" type="button" title="Ler o BibTeX colado acima e preencher título, autores, ano, periódico e DOI." class="mt-1 px-space-sm py-1 rounded bg-surface-container-high text-primary font-label-tag text-caption">Analisar BibTeX</button>
+    </details>
+    <input id="ma-titulo" title="Título completo do artigo (obrigatório)." placeholder="Título do artigo" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
+    <div class="grid grid-cols-2 gap-space-sm">
+      <input id="ma-autores" title="Autores no formato Sobrenome, Inicial (ex: Silva, R. M.)." placeholder="Autores (Sobrenome, N.)" class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
+      <input id="ma-ano" type="number" title="Ano de publicação." placeholder="Ano" class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
+    </div>
+    <div class="grid grid-cols-2 gap-space-sm">
+      <input id="ma-venue" title="Nome do periódico, evento ou instituição." placeholder="Periódico / Evento" class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
+      <input id="ma-doi" title="DOI do artigo, se houver (ex: 10.1109/TLT.2023.3289012)." placeholder="DOI (opcional)" class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
+    </div>
+    <div class="grid grid-cols-3 gap-space-sm">
+      <select id="ma-qualis" title="Classificação Qualis CAPES do periódico/evento." class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
+        <option>A1</option><option>A2</option><option>A3</option><option>A4</option><option>B1</option><option>Clássico</option><option>Normativa</option><option>Outro</option>
+      </select>
+      <select id="ma-relevancia" title="Quão importante este artigo é para o seu produto/dissertação." class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
+        <option>Essencial</option><option>Complementar</option><option>Metodológico</option>
+      </select>
+      <select id="ma-status" title="Status de leitura — define automaticamente o progresso mostrado na Biblioteca e no Dashboard (Não Lido = 0%, Em Leitura = 50%, Fichado = 100%)." class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
+        <option>Não Lido</option><option>Em Leitura</option><option>Fichado</option>
+      </select>
+    </div>
+    <input id="ma-tags" title="Palavras-chave separadas por vírgula, usadas para filtrar na Biblioteca." placeholder="Tags (separadas por vírgula)" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
+    <textarea id="ma-sintese" rows="3" title="Seu resumo/análise pessoal do artigo." placeholder="Síntese analítica do artigo" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm"></textarea>
+    <textarea id="ma-aplicacao" rows="2" title="Como este artigo justifica uma decisão do seu produto." placeholder="Aplicação direta no produto do mestrado" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm"></textarea>
+    <textarea id="ma-metodologia" rows="2" title="Metodologia ou validação usada no artigo." placeholder="Metodologia / validação" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm"></textarea>
+    <textarea id="ma-citacoes" rows="2" title="Uma citação direta por linha, no formato: número da página :: trecho citado." placeholder="Citações diretas: uma por linha, no formato  pagina :: trecho" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-label-code text-caption"></textarea>
+    <div class="flex items-center justify-end gap-space-sm pt-space-xs">
+      <button class="modal-close px-space-md py-space-xs rounded-lg font-label-tag text-body-sm text-on-surface-variant hover:bg-surface-container" data-modal="modal-artigo" title="Fechar sem salvar as alterações.">Cancelar</button>
+      <button id="ma-save-btn" title="Salvar este artigo e fechar o formulário." class="px-space-md py-space-xs rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-tag text-body-sm shadow-sm">Salvar Artigo</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL REQUISITO ================= -->
+<div id="modal-requisito" class="fixed inset-0 bg-primary/60 backdrop-blur-sm z-50 hidden items-center justify-center p-space-md overflow-y-auto">
+  <div class="bg-surface-container-lowest rounded-xl shadow-2xl max-w-xl w-full p-space-lg my-space-lg space-y-space-sm">
+    <div class="flex items-center justify-between">
+      <h3 id="mr-title" class="font-headline-sm text-headline-sm text-primary font-bold">Vincular Artigo ao Requisito</h3>
+      <button class="modal-close p-1 text-on-surface-variant hover:text-primary" data-modal="modal-requisito" title="Fechar sem salvar"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <select id="mr-modulo" title="Módulo do produto ao qual este requisito pertence." class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
+      <option value="m1">Módulo 1</option><option value="m2">Módulo 2</option><option value="m3">Módulo 3</option>
+    </select>
+    <div class="grid grid-cols-2 gap-space-sm">
+      <input id="mr-codigo" title="Identificador curto do requisito (ex: RF-15)." placeholder="Código (ex: RF-15)" class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-label-code text-body-sm">
+      <select id="mr-tipo" title="Tipo do requisito: Funcional, Não-Funcional ou Decisão Arquitetural." class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
+        <option value="RF">Funcional (RF)</option><option value="RNF">Não-Funcional (RNF)</option><option value="DEC">Decisão Arq. (DEC)</option>
+      </select>
+    </div>
+    <input id="mr-titulo-req" title="Nome curto do requisito ou decisão." placeholder="Título do requisito / decisão" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
+    <textarea id="mr-descricao" rows="2" title="O que este requisito exige do produto." placeholder="Descrição do requisito" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm"></textarea>
+    <select id="mr-status" title="Situação atual da implementação deste requisito." class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
+      <option>Implementado</option><option>Em Validação</option><option>Modelado no Backlog</option>
+    </select>
+    <select id="mr-artigo" title="Artigo da Biblioteca que fundamenta este requisito (opcional)." class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm"></select>
+    <textarea id="mr-justificativa" rows="2" title="Explique por que a evidência escolhida justifica esta decisão técnica." placeholder="Justificativa técnica / arquitetural" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm"></textarea>
+    <input id="mr-capitulo" title="Seção/capítulo da dissertação onde este requisito é discutido." placeholder="Capítulo da dissertação (ex: 4.2.1)" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
+    <div class="flex items-center justify-end gap-space-sm pt-space-xs">
+      <button class="modal-close px-space-md py-space-xs rounded-lg font-label-tag text-body-sm text-on-surface-variant hover:bg-surface-container" data-modal="modal-requisito" title="Fechar sem salvar.">Cancelar</button>
+      <button id="mr-save-btn" title="Salvar este requisito e fechar o formulário." class="px-space-md py-space-xs rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-tag text-body-sm shadow-sm">Salvar Vinculação</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="fixed bottom-6 right-6 z-50 translate-y-24 opacity-0 transition-all duration-300 pointer-events-none bg-primary text-on-primary px-space-md py-space-sm rounded-xl shadow-xl flex items-center gap-space-sm">
+  <span class="material-symbols-outlined text-tertiary-fixed text-xl">check_circle</span>
+  <span id="toast-message" class="font-body-sm text-body-sm"></span>
+</div>
+
+<script>
+(function(){
+'use strict';
+// Persistência: um único blob JSON em localStorage[STORAGE_KEY].
+// Esquema: { artigos: Artigo[], requisitos: Requisito[] }
+const STORAGE_KEY = 'profcomp-mestrado-v1';
+
+function esc(s){
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function uid(prefix){ return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+function seedState(){
+  return { artigos: [], requisitos: [] };
+}
+
+function loadLocal(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) { console.warn('Falha ao ler dados locais, reiniciando.', e); }
+  return seedState();
+}
+function saveLocal(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+let state = { artigos: [], requisitos: [] };
+// `db`: capability de sincronização (só existe quando a página roda publicada com acesso
+// à sua conta Claude). null = modo local, guardando tudo em localStorage neste navegador.
+let db = null;
+// `downloads`: só existe na página publicada; sem ela, um <a download> comum já funciona
+// (modo local, arquivo aberto direto no navegador).
+let downloadsCap = null;
+
+// ---------- Upsert/remove: gravam no `db` (sincronizado) quando disponível, senão em localStorage ----------
+async function upsertArtigo(id, data){
+  const finalId = id || (db ? db.collection('artigos').doc().id : uid('a'));
+  if (db) {
+    await db.collection('artigos').doc(finalId).set(data);
+  } else {
+    const idx = state.artigos.findIndex(a=>a.id===finalId);
+    if (idx>=0) state.artigos[idx] = {id: finalId, ...data};
+    else state.artigos.push({id: finalId, ...data});
+    saveLocal(); renderAll();
+  }
+  return finalId;
+}
+async function removeArtigo(id){
+  if (db) {
+    await db.collection('artigos').doc(id).delete();
+    const linked = state.requisitos.filter(r=>r.artigoId===id);
+    await Promise.all(linked.map(r=> db.collection('requisitos').doc(r.id).set({...r, artigoId:null})));
+  } else {
+    state.artigos = state.artigos.filter(a=>a.id!==id);
+    state.requisitos.forEach(r=>{ if (r.artigoId===id) r.artigoId = null; });
+    saveLocal(); renderAll();
+  }
+}
+async function upsertRequisito(id, data){
+  const finalId = id || (db ? db.collection('requisitos').doc().id : uid('r'));
+  if (db) {
+    await db.collection('requisitos').doc(finalId).set(data);
+  } else {
+    const idx = state.requisitos.findIndex(r=>r.id===finalId);
+    if (idx>=0) state.requisitos[idx] = {id: finalId, ...data};
+    else state.requisitos.push({id: finalId, ...data});
+    saveLocal(); renderAll();
+  }
+  return finalId;
+}
+async function removeRequisito(id){
+  if (db) {
+    await db.collection('requisitos').doc(id).delete();
+  } else {
+    state.requisitos = state.requisitos.filter(r=>r.id!==id);
+    saveLocal(); renderAll();
+  }
+}
+async function wipeAll(){
+  if (db) {
+    const [as, rs] = await Promise.all([db.collection('artigos').get(), db.collection('requisitos').get()]);
+    await Promise.all([
+      ...as.docs.map(d=> db.collection('artigos').doc(d.id).delete()),
+      ...rs.docs.map(d=> db.collection('requisitos').doc(d.id).delete())
+    ]);
+  } else {
+    localStorage.removeItem(STORAGE_KEY);
+    state = seedState();
+    saveLocal(); renderAll();
+  }
+}
+
+// ---------- Toast ----------
+let toastTimer = null;
+function toast(msg){
+  const el = document.getElementById('toast');
+  document.getElementById('toast-message').textContent = msg;
+  el.classList.remove('translate-y-24','opacity-0');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> el.classList.add('translate-y-24','opacity-0'), 3000);
+}
+
+// ---------- Navegação ----------
+const SECTIONS = ['dashboard','biblioteca','matriz','sintese'];
+function showSection(name){
+  if (!SECTIONS.includes(name)) name = 'dashboard';
+  SECTIONS.forEach(s => document.getElementById('section-'+s).hidden = (s !== name));
+  document.querySelectorAll('.nav-btn').forEach(b=>{
+    const active = b.dataset.path === name;
+    b.classList.toggle('bg-primary-container', active);
+    b.classList.toggle('text-on-primary-container', active);
+    b.classList.toggle('font-semibold', active);
+    b.classList.toggle('text-on-surface-variant', !active);
+  });
+  document.getElementById('sidebar').classList.remove('open');
+  location.hash = name;
+}
+document.getElementById('nav').addEventListener('click', e=>{
+  const btn = e.target.closest('.nav-btn');
+  if (btn) showSection(btn.dataset.path);
+});
+window.addEventListener('hashchange', ()=> showSection(location.hash.slice(1)));
+document.getElementById('btn-toggle-sidebar').addEventListener('click', ()=> document.getElementById('sidebar').classList.toggle('open'));
+
+// ---------- Modais ----------
+function openModal(id){ const m=document.getElementById(id); m.classList.remove('hidden'); m.classList.add('flex'); }
+function closeModal(id){ const m=document.getElementById(id); m.classList.add('hidden'); m.classList.remove('flex'); }
+document.querySelectorAll('.modal-close').forEach(b=> b.addEventListener('click', ()=> closeModal(b.dataset.modal)));
+[['modal-artigo'],['modal-requisito']].forEach(([id])=>{
+  document.getElementById(id).addEventListener('click', e=>{ if (e.target.id === id) closeModal(id); });
+});
+
+// ---------- BibTeX parsing (lazy: cobre os campos comuns) ----------
+function parseBibtex(text){
+  const get = (key) => {
+    const m = text.match(new RegExp(key + "\\s*=\\s*[{\"]([^}\"]*)[}\"]", 'i'));
+    return m ? m[1].trim() : '';
+  };
+  const keyMatch = text.match(/@\w+\{([^,]+),/);
+  return {
+    bibtexKey: keyMatch ? keyMatch[1].trim() : '',
+    titulo: get('title'),
+    autoresText: get('author'),
+    ano: get('year'),
+    venue: get('journal') || get('booktitle') || get('publisher'),
+    doi: get('doi')
+  };
+}
+
+// ---------- Artigo: modal, salvar, excluir ----------
+let editingArtigoId = null;
+// O progresso (%) mostrado na Biblioteca/Dashboard vem sempre do status — não é editado à parte,
+// para não ficar dessincronizado (era a causa de "marquei Fichado mas continua contando como pendente").
+function progressoFromStatus(status){
+  return status === 'Fichado' ? 100 : status === 'Em Leitura' ? 50 : 0;
+}
+function fillArtigoForm(a){
+  document.getElementById('ma-titulo').value = a?.titulo || '';
+  document.getElementById('ma-autores').value = a?.autoresText || '';
+  document.getElementById('ma-ano').value = a?.ano || '';
+  document.getElementById('ma-venue').value = a?.venue || '';
+  document.getElementById('ma-doi').value = a?.doi || '';
+  document.getElementById('ma-qualis').value = a?.qualis || 'A1';
+  document.getElementById('ma-relevancia').value = a?.relevancia || 'Essencial';
+  document.getElementById('ma-status').value = a?.status || 'Não Lido';
+  document.getElementById('ma-tags').value = (a?.tags || []).join(', ');
+  document.getElementById('ma-sintese').value = a?.sintese || '';
+  document.getElementById('ma-aplicacao').value = a?.aplicacaoProduto || '';
+  document.getElementById('ma-metodologia').value = a?.metodologia || '';
+  document.getElementById('ma-citacoes').value = (a?.citacoes || []).map(c=>`${c.pagina} :: ${c.trecho}`).join('\n');
+  document.getElementById('ma-bibtex-paste').value = '';
+}
+function openArtigoModal(id){
+  editingArtigoId = id || null;
+  const artigo = id ? state.artigos.find(a=>a.id===id) : null;
+  document.getElementById('ma-title').textContent = id ? 'Editar Artigo / Fichamento' : 'Novo Artigo';
+  fillArtigoForm(artigo);
+  openModal('modal-artigo');
+}
+document.getElementById('btn-new-artigo').addEventListener('click', ()=> openArtigoModal(null));
+document.getElementById('btn-new-artigo-2').addEventListener('click', ()=> openArtigoModal(null));
+document.getElementById('ma-parse-btn').addEventListener('click', ()=>{
+  const text = document.getElementById('ma-bibtex-paste').value.trim();
+  if (!text) return;
+  const parsed = parseBibtex(text);
+  if (parsed.titulo) document.getElementById('ma-titulo').value = parsed.titulo;
+  if (parsed.autoresText) document.getElementById('ma-autores').value = parsed.autoresText;
+  if (parsed.ano) document.getElementById('ma-ano').value = parsed.ano;
+  if (parsed.venue) document.getElementById('ma-venue').value = parsed.venue;
+  if (parsed.doi) document.getElementById('ma-doi').value = parsed.doi;
+  toast('Campos preenchidos a partir do BibTeX.');
+});
+document.getElementById('btn-import-bibtex').addEventListener('click', ()=> openArtigoModal(null));
+document.getElementById('ma-save-btn').addEventListener('click', async ()=>{
+  const titulo = document.getElementById('ma-titulo').value.trim();
+  if (!titulo){ toast('Informe ao menos o título do artigo.'); return; }
+  const citacoes = document.getElementById('ma-citacoes').value.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
+    const [pagina, ...rest] = l.split('::');
+    return rest.length ? {pagina: pagina.trim(), trecho: rest.join('::').trim()} : {pagina:'', trecho: l};
+  });
+  const status = document.getElementById('ma-status').value;
+  const prev = editingArtigoId ? state.artigos.find(a=>a.id===editingArtigoId) : null;
+  const data = {
+    titulo,
+    autoresText: document.getElementById('ma-autores').value.trim(),
+    ano: Number(document.getElementById('ma-ano').value) || '',
+    venue: document.getElementById('ma-venue').value.trim(),
+    doi: document.getElementById('ma-doi').value.trim(),
+    qualis: document.getElementById('ma-qualis').value,
+    relevancia: document.getElementById('ma-relevancia').value,
+    status,
+    progresso: progressoFromStatus(status),
+    tags: document.getElementById('ma-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+    sintese: document.getElementById('ma-sintese').value.trim(),
+    aplicacaoProduto: document.getElementById('ma-aplicacao').value.trim(),
+    metodologia: document.getElementById('ma-metodologia').value.trim(),
+    citacoes,
+    citacoesExtraidas: citacoes.length || prev?.citacoesExtraidas || 0,
+    avaliacao: prev?.avaliacao || 0,
+    bibtexKey: prev?.bibtexKey || uid('key'),
+    createdAt: prev?.createdAt || Date.now()
+  };
+  try {
+    const savedId = await upsertArtigo(editingArtigoId, data);
+    // Limpa os filtros da Biblioteca e mostra o artigo salvo, para garantir que ele apareça
+    // mesmo se havia uma busca/filtro antigo escondendo a lista (era a causa do "não deu certo").
+    bibFiltro.q = ''; bibFiltro.status = 'all'; bibFiltro.qualis = 'all'; bibFiltro.tag = null;
+    const bibSearchEl = document.getElementById('bib-search');
+    if (bibSearchEl) bibSearchEl.value = '';
+    const bibStatusEl = document.getElementById('bib-status');
+    if (bibStatusEl) bibStatusEl.value = 'all';
+    selectedArtigoId = savedId;
+    closeModal('modal-artigo');
+    showSection('biblioteca');
+    toast('Artigo salvo com sucesso.');
+  } catch (err) {
+    console.error(err);
+    toast('Não foi possível salvar agora. Verifique a conexão e tente novamente.');
+  }
+});
+async function deleteArtigo(id){
+  if (!confirm('Excluir este artigo e seu fichamento?')) return;
+  try {
+    await removeArtigo(id);
+    if (selectedArtigoId === id) selectedArtigoId = null;
+    toast('Artigo excluído.');
+  } catch (err) {
+    console.error(err);
+    toast('Não foi possível excluir agora. Verifique a conexão e tente novamente.');
+  }
+}
+
+// ---------- Requisito: modal, salvar, excluir ----------
+let editingRequisitoId = null;
+function refreshArtigoSelect(){
+  const sel = document.getElementById('mr-artigo');
+  const current = sel.value;
+  sel.innerHTML = '<option value="">— Sem evidência vinculada —</option>' +
+    state.artigos.map(a=>`<option value="${esc(a.id)}">${esc(a.autoresText)} (${esc(a.ano)}) — ${esc(a.titulo.slice(0,50))}</option>`).join('');
+  sel.value = current;
+}
+function openRequisitoModal(id){
+  editingRequisitoId = id || null;
+  const r = id ? state.requisitos.find(x=>x.id===id) : null;
+  document.getElementById('mr-title').textContent = id ? 'Editar Vinculação' : 'Vincular Artigo ao Requisito';
+  refreshArtigoSelect();
+  document.getElementById('mr-modulo').value = r?.modulo || 'm1';
+  document.getElementById('mr-codigo').value = r?.codigo || '';
+  document.getElementById('mr-tipo').value = r?.tipo || 'RF';
+  document.getElementById('mr-titulo-req').value = r?.titulo || '';
+  document.getElementById('mr-descricao').value = r?.descricao || '';
+  document.getElementById('mr-status').value = r?.status || 'Modelado no Backlog';
+  document.getElementById('mr-artigo').value = r?.artigoId || '';
+  document.getElementById('mr-justificativa').value = r?.justificativa || '';
+  document.getElementById('mr-capitulo').value = r?.capitulo || '';
+  openModal('modal-requisito');
+}
+document.getElementById('btn-add-vinculo').addEventListener('click', ()=> openRequisitoModal(null));
+document.getElementById('mr-save-btn').addEventListener('click', async ()=>{
+  const codigo = document.getElementById('mr-codigo').value.trim();
+  const titulo = document.getElementById('mr-titulo-req').value.trim();
+  if (!codigo || !titulo){ toast('Informe código e título do requisito.'); return; }
+  const data = {
+    modulo: document.getElementById('mr-modulo').value,
+    codigo, tipo: document.getElementById('mr-tipo').value, titulo,
+    descricao: document.getElementById('mr-descricao').value.trim(),
+    status: document.getElementById('mr-status').value,
+    artigoId: document.getElementById('mr-artigo').value || null,
+    justificativa: document.getElementById('mr-justificativa').value.trim(),
+    capitulo: document.getElementById('mr-capitulo').value.trim()
+  };
+  try {
+    await upsertRequisito(editingRequisitoId, data);
+    // Limpa os filtros da Matriz para garantir que o requisito salvo apareça na lista.
+    mtzFiltro.q = ''; mtzFiltro.modulo = 'all'; mtzFiltro.tipo = 'all'; mtzFiltro.statuses = new Set(STATUSES);
+    const mtzSearchEl = document.getElementById('mtz-search');
+    if (mtzSearchEl) mtzSearchEl.value = '';
+    closeModal('modal-requisito');
+    showSection('matriz');
+    toast(`Requisito ${esc(codigo)} salvo.`);
+  } catch (err) {
+    console.error(err);
+    toast('Não foi possível salvar agora. Verifique a conexão e tente novamente.');
+  }
+});
+async function deleteRequisito(id){
+  if (!confirm('Excluir esta vinculação?')) return;
+  try {
+    await removeRequisito(id);
+    toast('Vinculação excluída.');
+  } catch (err) {
+    console.error(err);
+    toast('Não foi possível excluir agora. Verifique a conexão e tente novamente.');
+  }
+}
+
+// ---------- Dashboard ----------
+function renderDashboard(){
+  const artigos = state.artigos;
+  const total = artigos.length;
+  const completos = artigos.filter(a=>a.progresso>=100).length;
+  const emLeitura = artigos.filter(a=>a.progresso>0 && a.progresso<100).length;
+  const pendentes = artigos.filter(a=>!a.progresso).length;
+  const citacoes = artigos.reduce((s,a)=>s+(a.citacoesExtraidas||0),0);
+  const cards = [
+    ['auto_stories','Total Mapeado', total, 'artigos'],
+    ['task_alt','Fichados Completo', completos, total?Math.round(completos/total*100)+'% da meta':''],
+    ['menu_book','Em Leitura Ativa', emLeitura, 'em progresso'],
+    ['pending_actions','Pendentes', pendentes, 'não lidos'],
+    ['format_quote','Citações Extraídas', citacoes, 'trechos']
+  ];
+  document.getElementById('kpi-grid').innerHTML = cards.map(([icon,label,value,sub])=>`
+    <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between">
+      <div class="flex items-center justify-between text-on-surface-variant mb-space-xs">
+        <span class="font-caption text-caption uppercase tracking-wider font-semibold">${esc(label)}</span>
+        <span class="material-symbols-outlined text-secondary text-xl">${esc(icon)}</span>
+      </div>
+      <div class="flex items-baseline gap-space-xs">
+        <span class="font-headline-lg text-headline-lg font-bold text-primary">${esc(value)}</span>
+        <span class="font-caption text-caption text-on-surface-variant font-medium">${esc(sub)}</span>
+      </div>
+    </div>`).join('');
+
+  const byQualis = {};
+  artigos.forEach(a=>{ byQualis[a.qualis] = (byQualis[a.qualis]||0)+1; });
+  const maxCount = Math.max(1, ...Object.values(byQualis));
+  document.getElementById('qualis-list').innerHTML = Object.entries(byQualis).sort((a,b)=>b[1]-a[1]).map(([q,c])=>`
+    <div>
+      <div class="flex justify-between items-center text-body-sm font-body-sm mb-1">
+        <span class="text-on-surface font-medium">Qualis ${esc(q)}</span>
+        <span class="font-label-code text-label-code text-primary font-bold">${c}</span>
+      </div>
+      <div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden">
+        <div class="bg-secondary-container h-full rounded-full" style="width:${Math.round(c/maxCount*100)}%"></div>
+      </div>
+    </div>`).join('') || '<p class="font-body-sm text-on-surface-variant">Nenhum artigo cadastrado ainda.</p>';
+
+  const recent = [...artigos].sort((a,b)=>b.createdAt-a.createdAt).slice(0,5);
+  document.getElementById('recent-table-body').innerHTML = recent.map(a=>`
+    <tr class="hover:bg-surface-container-low/40">
+      <td class="py-space-sm px-space-md max-w-sm truncate">${esc(a.titulo)}</td>
+      <td class="py-space-sm px-space-sm">${esc(a.ano)}</td>
+      <td class="py-space-sm px-space-sm">${esc(a.qualis)}</td>
+      <td class="py-space-sm px-space-sm">${esc(a.status)}</td>
+      <td class="py-space-sm px-space-md text-right">
+        <button class="btn-ver-artigo font-label-tag text-caption text-secondary hover:underline" data-id="${esc(a.id)}" title="Abrir este artigo na Biblioteca para ver ou editar o fichamento completo">Abrir</button>
+      </td>
+    </tr>`).join('') || '<tr><td class="py-space-md px-space-md text-on-surface-variant" colspan="5">Nenhum artigo ainda — clique em "Novo Artigo".</td></tr>';
+  document.querySelectorAll('.btn-ver-artigo').forEach(b=> b.addEventListener('click', ()=>{
+    selectedArtigoId = b.dataset.id;
+    showSection('biblioteca');
+    renderBiblioteca();
+  }));
+}
+
+document.getElementById('btn-export-resumo').addEventListener('click', ()=>{
+  const artigos = state.artigos;
+  const lines = [`Resumo de leitura — ${artigos.length} artigos mapeados, ${artigos.filter(a=>a.progresso>=100).length} fichados.`, ''];
+  artigos.forEach(a=> lines.push(`- ${a.autoresText} (${a.ano}). ${a.titulo}. Qualis ${a.qualis}. Status: ${a.status}.`));
+  navigator.clipboard.writeText(lines.join('\n')).then(()=> toast('Resumo copiado para a área de transferência.'));
+});
+
+// ---------- Biblioteca ----------
+let selectedArtigoId = null;
+const bibFiltro = {q:'', status:'all', qualis:'all', tag:null};
+function filteredArtigos(){
+  return state.artigos.filter(a=>{
+    if (bibFiltro.status!=='all' && a.status!==bibFiltro.status) return false;
+    if (bibFiltro.qualis!=='all' && a.qualis!==bibFiltro.qualis) return false;
+    if (bibFiltro.tag && !(a.tags||[]).includes(bibFiltro.tag)) return false;
+    if (bibFiltro.q){
+      const hay = [a.titulo,a.autoresText,a.sintese,(a.tags||[]).join(' ')].join(' ').toLowerCase();
+      if (!hay.includes(bibFiltro.q.toLowerCase())) return false;
+    }
+    return true;
+  });
+}
+function renderArtigoDetail(a){
+  const el = document.getElementById('biblioteca-detail');
+  if (!a){ el.innerHTML = '<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm text-on-surface-variant font-body-sm">Selecione um artigo à esquerda para ver o fichamento completo.</div>'; return; }
+  el.innerHTML = `
+    <div class="bg-surface-container-lowest rounded-xl shadow-md p-space-lg flex flex-col gap-space-md">
+      <div class="flex items-start justify-between gap-space-sm">
+        <div>
+          <div class="flex items-center gap-space-xs mb-1">
+            <span class="px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-label-code text-caption font-bold">Qualis ${esc(a.qualis)}</span>
+            <span class="px-2 py-0.5 rounded bg-surface-container-high text-primary font-label-code text-caption">${esc(a.relevancia)}</span>
+          </div>
+          <h2 class="font-headline-sm text-headline-sm text-primary">${esc(a.titulo)}</h2>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">${esc(a.autoresText)} • ${esc(a.venue)} (${esc(a.ano)})</p>
+        </div>
+        <div class="flex items-center gap-1 shrink-0">
+          <button id="btn-edit-artigo" class="p-2 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-primary" title="Editar título, autores, síntese e demais campos deste artigo"><span class="material-symbols-outlined text-lg">edit_note</span></button>
+          <button id="btn-delete-artigo" class="p-2 rounded-lg bg-surface-container-high hover:bg-error-container text-error" title="Excluir permanentemente este artigo e seu fichamento (não pode ser desfeito)"><span class="material-symbols-outlined text-lg">delete</span></button>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-space-sm">
+        <div class="bg-surface-container-low p-space-sm rounded-xl"><span class="font-caption text-caption text-on-surface-variant block">Status</span><span class="font-label-tag text-label-tag text-primary">${esc(a.status)} (${a.progresso}%)</span></div>
+        <div class="bg-surface-container-low p-space-sm rounded-xl"><span class="font-caption text-caption text-on-surface-variant block">Citações extraídas</span><span class="font-label-tag text-label-tag text-primary">${esc(a.citacoesExtraidas||0)}</span></div>
+        <div class="bg-surface-container-low p-space-sm rounded-xl"><span class="font-caption text-caption text-on-surface-variant block">DOI</span><span class="font-label-code text-caption text-primary truncate block">${esc(a.doi)||'—'}</span></div>
+      </div>
+      ${a.sintese ? `<div><h4 class="font-headline-sm text-body-lg text-primary mb-1">Síntese Analítica</h4><p class="font-body-md text-body-md bg-surface-container-low p-space-md rounded-xl">${esc(a.sintese)}</p></div>` : ''}
+      ${(a.citacoes||[]).length ? `<div><h4 class="font-headline-sm text-body-lg text-primary mb-1">Citações Diretas</h4><div class="space-y-space-xs">${a.citacoes.map(c=>`<blockquote class="bg-surface-container-low p-space-sm rounded-xl italic border-l-2 border-secondary-container"><span class="font-label-code text-caption text-secondary block mb-1">p. ${esc(c.pagina)}</span>${esc(c.trecho)}</blockquote>`).join('')}</div></div>` : ''}
+      ${a.aplicacaoProduto ? `<div><h4 class="font-headline-sm text-body-lg text-primary mb-1">Aplicação no Produto</h4><p class="font-body-sm text-body-sm bg-surface-container-low p-space-sm rounded-xl">${esc(a.aplicacaoProduto)}</p></div>` : ''}
+      ${a.metodologia ? `<div><h4 class="font-headline-sm text-body-lg text-primary mb-1">Metodologia</h4><p class="font-body-sm text-body-sm bg-surface-container-low p-space-sm rounded-xl">${esc(a.metodologia)}</p></div>` : ''}
+      <div class="flex items-center justify-between pt-space-xs bg-surface-container-low px-space-sm py-1.5 rounded-lg">
+        <span class="font-label-code text-caption text-on-surface-variant">@${esc(a.bibtexKey)}</span>
+        <button id="btn-copy-bibtex-one" title="Copiar a entrada BibTeX deste artigo para a área de transferência" class="font-label-tag text-caption text-secondary hover:underline flex items-center gap-1"><span class="material-symbols-outlined text-sm">content_copy</span>Copiar BibTeX</button>
+      </div>
+    </div>`;
+  document.getElementById('btn-edit-artigo').addEventListener('click', ()=> openArtigoModal(a.id));
+  document.getElementById('btn-delete-artigo').addEventListener('click', ()=> deleteArtigo(a.id));
+  document.getElementById('btn-copy-bibtex-one').addEventListener('click', ()=>{
+    navigator.clipboard.writeText(toBibtex(a)).then(()=> toast('Entrada BibTeX copiada.'));
+  });
+}
+function renderBiblioteca(){
+  const allQualis = [...new Set(state.artigos.map(a=>a.qualis))];
+  const qualisSel = document.getElementById('bib-qualis');
+  const curQualis = qualisSel.value;
+  qualisSel.innerHTML = '<option value="all">Qualquer Qualis</option>' + allQualis.map(q=>`<option value="${esc(q)}">${esc(q)}</option>`).join('');
+  qualisSel.value = curQualis || 'all';
+
+  const allTags = [...new Set(state.artigos.flatMap(a=>a.tags||[]))];
+  document.getElementById('bib-tags').innerHTML = allTags.map(t=>`
+    <button class="tag-chip shrink-0 px-2.5 py-0.5 rounded-full font-label-tag text-label-tag transition-colors ${bibFiltro.tag===t ? 'bg-primary-container text-on-primary' : 'bg-surface-container-high text-on-surface hover:bg-surface-container-highest'}" data-tag="${esc(t)}" title="Clique para filtrar pela tag &quot;${esc(t)}&quot;; clique de novo para remover o filtro">${esc(t)}</button>
+  `).join('');
+  document.querySelectorAll('.tag-chip').forEach(b=> b.addEventListener('click', ()=>{
+    bibFiltro.tag = bibFiltro.tag === b.dataset.tag ? null : b.dataset.tag;
+    renderBiblioteca();
+  }));
+
+  const list = filteredArtigos();
+  document.getElementById('bib-counter').textContent = `Mostrando ${list.length} de ${state.artigos.length} artigos`;
+  document.getElementById('biblioteca-list').innerHTML = list.map(a=>`
+    <article class="artigo-card p-space-md rounded-xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all cursor-pointer relative overflow-hidden ${selectedArtigoId===a.id ? 'ring-2 ring-secondary-container' : ''}" data-id="${esc(a.id)}" title="Clique para ver e editar o fichamento completo deste artigo">
+      <div class="flex flex-wrap items-center gap-1.5 mb-1">
+        <span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-code text-caption font-semibold">Qualis ${esc(a.qualis)}</span>
+        <span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface font-label-code text-caption">${esc(a.status)}</span>
+      </div>
+      <h3 class="font-headline-sm text-headline-sm text-primary mb-1 leading-snug">${esc(a.titulo)}</h3>
+      <p class="font-body-sm text-body-sm text-on-surface-variant mb-1">${esc(a.autoresText)} (${esc(a.ano)})</p>
+      <div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden"><div class="bg-secondary-container h-full rounded-full" style="width:${a.progresso}%"></div></div>
+    </article>`).join('') || '<p class="font-body-sm text-on-surface-variant p-space-md">Nenhum artigo corresponde aos filtros.</p>';
+  document.querySelectorAll('.artigo-card').forEach(c=> c.addEventListener('click', ()=>{
+    selectedArtigoId = c.dataset.id;
+    renderBiblioteca();
+  }));
+  const selected = selectedArtigoId ? state.artigos.find(a=>a.id===selectedArtigoId) : null;
+  renderArtigoDetail(selected);
+}
+document.getElementById('bib-search').addEventListener('input', e=>{ bibFiltro.q = e.target.value; renderBiblioteca(); });
+document.getElementById('bib-status').addEventListener('change', e=>{ bibFiltro.status = e.target.value; renderBiblioteca(); });
+document.getElementById('bib-qualis').addEventListener('change', e=>{ bibFiltro.qualis = e.target.value; renderBiblioteca(); });
+document.getElementById('global-search').addEventListener('keydown', e=>{
+  if (e.key !== 'Enter') return;
+  bibFiltro.q = e.target.value;
+  document.getElementById('bib-search').value = e.target.value;
+  showSection('biblioteca'); renderBiblioteca();
+});
+
+// ---------- Matriz ----------
+const MODULOS = [['all','Todos os Módulos'],['m1','Módulo 1'],['m2','Módulo 2'],['m3','Módulo 3']];
+const TIPOS = [['all','Todos'],['RF','Funcional'],['RNF','Não-Funcional'],['DEC','Decisão Arq.']];
+const STATUSES = ['Implementado','Em Validação','Modelado no Backlog'];
+const mtzFiltro = {q:'', modulo:'all', tipo:'all', statuses: new Set(STATUSES)};
+function renderMatrizFilters(){
+  document.getElementById('mtz-modulos').innerHTML = MODULOS.map(([v,l])=>`
+    <button class="mtz-modulo-btn text-left px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm ${mtzFiltro.modulo===v?'bg-primary-container text-on-primary':'text-on-surface-variant hover:bg-surface-container-low'}" data-v="${v}" title="Mostrar apenas requisitos de: ${esc(l)}">${esc(l)}</button>`).join('');
+  document.getElementById('mtz-tipos').innerHTML = TIPOS.map(([v,l])=>`
+    <button class="mtz-tipo-btn px-space-sm py-1 rounded-lg font-body-sm text-body-sm ${mtzFiltro.tipo===v?'bg-surface-container-high text-primary font-semibold':'bg-surface-container text-on-surface-variant'}" data-v="${v}" title="Filtrar por tipo: ${esc(l)}">${esc(l)}</button>`).join('');
+  document.getElementById('mtz-status').innerHTML = STATUSES.map(s=>`
+    <label class="flex items-center gap-space-xs p-1 rounded hover:bg-surface-container-low cursor-pointer" title="Mostrar/ocultar requisitos com status &quot;${esc(s)}&quot;">
+      <input type="checkbox" class="mtz-status-check" value="${esc(s)}" ${mtzFiltro.statuses.has(s)?'checked':''}> <span class="font-body-sm text-body-sm">${esc(s)}</span>
+    </label>`).join('');
+  document.querySelectorAll('.mtz-modulo-btn').forEach(b=> b.addEventListener('click', ()=>{ mtzFiltro.modulo=b.dataset.v; renderMatriz(); }));
+  document.querySelectorAll('.mtz-tipo-btn').forEach(b=> b.addEventListener('click', ()=>{ mtzFiltro.tipo=b.dataset.v; renderMatriz(); }));
+  document.querySelectorAll('.mtz-status-check').forEach(c=> c.addEventListener('change', ()=>{
+    if (c.checked) mtzFiltro.statuses.add(c.value); else mtzFiltro.statuses.delete(c.value);
+    renderMatriz();
+  }));
+}
+document.getElementById('mtz-search').addEventListener('input', e=>{ mtzFiltro.q = e.target.value; renderMatriz(); });
+function renderMatriz(){
+  renderMatrizFilters();
+  const total = state.requisitos.length;
+  const impl = state.requisitos.filter(r=>r.status==='Implementado').length;
+  document.getElementById('matriz-cobertura').textContent = total ? Math.round(impl/total*100)+'%' : '—';
+
+  const list = state.requisitos.filter(r=>{
+    if (mtzFiltro.modulo!=='all' && r.modulo!==mtzFiltro.modulo) return false;
+    if (mtzFiltro.tipo!=='all' && r.tipo!==mtzFiltro.tipo) return false;
+    if (!mtzFiltro.statuses.has(r.status)) return false;
+    if (mtzFiltro.q){
+      const hay = [r.codigo,r.titulo,r.descricao].join(' ').toLowerCase();
+      if (!hay.includes(mtzFiltro.q.toLowerCase())) return false;
+    }
+    return true;
+  });
+  document.getElementById('matriz-list').innerHTML = list.map(r=>{
+    const artigo = r.artigoId ? state.artigos.find(a=>a.id===r.artigoId) : null;
+    return `
+    <article class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+      <div class="flex flex-wrap items-center justify-between gap-space-sm mb-space-xs">
+        <div class="flex flex-wrap items-center gap-space-xs">
+          <span class="font-label-code text-caption px-2 py-0.5 rounded bg-primary text-on-primary font-bold">${esc(r.codigo)}</span>
+          <span class="font-caption text-caption text-on-surface-variant">${esc(r.modulo.toUpperCase())} • ${esc(r.tipo)}</span>
+        </div>
+        <span class="font-label-tag text-caption px-2.5 py-0.5 rounded-full font-semibold ${r.status==='Implementado'?'bg-tertiary-fixed text-on-tertiary-fixed':(r.status==='Em Validação'?'bg-secondary-fixed text-on-secondary-fixed':'bg-surface-container-highest text-on-surface-variant')}">${esc(r.status)}</span>
+      </div>
+      <h3 class="font-headline-sm text-headline-sm text-primary font-semibold">${esc(r.titulo)}</h3>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-0.5 mb-space-sm">${esc(r.descricao)}</p>
+      <div class="bg-surface-container-low p-space-sm rounded-lg">
+        ${artigo ? `
+          <span class="font-caption text-caption text-on-surface-variant uppercase tracking-wider font-semibold block mb-1">Evidência: ${esc(artigo.autoresText)} (${esc(artigo.ano)})</span>
+          <p class="font-body-sm text-body-sm text-on-surface">${esc(r.justificativa)}</p>
+        ` : `<p class="font-body-sm text-body-sm text-on-surface-variant italic">Sem evidência vinculada.</p>`}
+      </div>
+      <div class="flex items-center justify-between pt-space-xs mt-space-xs">
+        <span class="font-caption text-caption text-on-surface-variant">Capítulo: ${esc(r.capitulo)||'—'}</span>
+        <div class="flex items-center gap-space-xs">
+          <button class="btn-edit-req font-label-tag text-caption text-secondary hover:underline" data-id="${esc(r.id)}" title="Editar este requisito ou trocar o artigo vinculado">Editar</button>
+          <button class="btn-delete-req font-label-tag text-caption text-error hover:underline" data-id="${esc(r.id)}" title="Excluir permanentemente este requisito (não pode ser desfeito)">Excluir</button>
+        </div>
+      </div>
+    </article>`;
+  }).join('') || '<p class="font-body-sm text-on-surface-variant">Nenhum requisito corresponde aos filtros.</p>';
+  document.querySelectorAll('.btn-edit-req').forEach(b=> b.addEventListener('click', ()=> openRequisitoModal(b.dataset.id)));
+  document.querySelectorAll('.btn-delete-req').forEach(b=> b.addEventListener('click', ()=> deleteRequisito(b.dataset.id)));
+}
+
+// ---------- Síntese ----------
+function toBibtex(a){
+  const type = a.venue ? 'article' : 'misc';
+  let s = `@${type}{${a.bibtexKey},\n  author = {${a.autoresText}},\n  title = {${a.titulo}},\n`;
+  if (a.venue) s += `  journal = {${a.venue}},\n`;
+  s += `  year = {${a.ano}}`;
+  if (a.doi) s += `,\n  doi = {${a.doi}}`;
+  s += `\n}`;
+  return s;
+}
+function toAbnt(a){
+  let s = `${a.autoresText.toUpperCase()}. ${a.titulo}. `;
+  if (a.venue) s += `${a.venue}, `;
+  s += `${a.ano}.`;
+  if (a.doi) s += ` DOI: ${a.doi}.`;
+  return s;
+}
+let sinteseTab = 'abnt';
+function renderSintese(){
+  document.getElementById('export-abnt').textContent = state.artigos.map(toAbnt).join('\n\n') || 'Nenhum artigo cadastrado ainda.';
+  document.getElementById('export-bibtex').textContent = state.artigos.map(toBibtex).join('\n\n') || '% Nenhum artigo cadastrado ainda.';
+}
+function switchSinteseTab(tab){
+  sinteseTab = tab;
+  const abntOn = tab === 'abnt';
+  document.getElementById('tab-btn-abnt').className = 'py-1.5 px-space-md rounded-md font-bold ' + (abntOn ? 'bg-surface-container-lowest text-primary shadow-xs' : 'text-on-surface-variant');
+  document.getElementById('tab-btn-bibtex').className = 'py-1.5 px-space-md rounded-md font-bold ' + (!abntOn ? 'bg-surface-container-lowest text-primary shadow-xs' : 'text-on-surface-variant');
+  document.getElementById('export-abnt').hidden = !abntOn;
+  document.getElementById('export-bibtex').hidden = abntOn;
+}
+document.getElementById('tab-btn-abnt').addEventListener('click', ()=> switchSinteseTab('abnt'));
+document.getElementById('tab-btn-bibtex').addEventListener('click', ()=> switchSinteseTab('bibtex'));
+document.getElementById('btn-copy-export').addEventListener('click', ()=>{
+  const text = sinteseTab === 'abnt' ? document.getElementById('export-abnt').textContent : document.getElementById('export-bibtex').textContent;
+  navigator.clipboard.writeText(text).then(()=> toast('Referências copiadas para a área de transferência.'));
+});
+document.getElementById('btn-print-export').addEventListener('click', ()=> window.print());
+
+// ---------- Backup (exportar/importar .json) — para usar em outro aparelho ----------
+document.getElementById('btn-export-json').addEventListener('click', async ()=>{
+  const filename = `profcomp-backup-${new Date().toISOString().slice(0,10)}.json`;
+  const json = JSON.stringify(state, null, 2);
+  if (downloadsCap) {
+    try {
+      await downloadsCap.save({filename, data: json});
+      toast('Backup baixado. Leve este arquivo para outro aparelho e use "Importar backup" lá.');
+    } catch (err) {
+      if (err && err.code === 'declined') return;
+      console.error(err);
+      toast('Não foi possível baixar o backup agora.');
+    }
+    return;
+  }
+  const blob = new Blob([json], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Backup baixado. Leve este arquivo para outro aparelho e use "Importar backup" lá.');
+});
+document.getElementById('btn-import-json').addEventListener('click', ()=> document.getElementById('import-file-input').click());
+document.getElementById('import-file-input').addEventListener('change', e=>{
+  const file = e.target.files[0];
+  e.target.value = '';
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async () => {
+    try {
+      const parsed = JSON.parse(reader.result);
+      if (!Array.isArray(parsed.artigos) || !Array.isArray(parsed.requisitos)) throw new Error('formato inesperado');
+      if (db) {
+        await wipeAll();
+        await Promise.all(parsed.artigos.map(a=> db.collection('artigos').doc(a.id || uid('a')).set(a)));
+        await Promise.all(parsed.requisitos.map(r=> db.collection('requisitos').doc(r.id || uid('r')).set(r)));
+      } else {
+        state = parsed;
+        saveLocal(); renderAll();
+      }
+      toast(`Backup importado: ${parsed.artigos.length} artigos e ${parsed.requisitos.length} requisitos.`);
+    } catch (err) {
+      console.error(err);
+      toast('Não foi possível importar: o arquivo não é um backup válido deste app.');
+    }
+  };
+  reader.readAsText(file);
+});
+
+// ---------- Reset ----------
+document.getElementById('btn-reset-data').addEventListener('click', async ()=>{
+  if (!confirm('Isso apaga todos os artigos e requisitos salvos. Não pode ser desfeito. Continuar?')) return;
+  try {
+    await wipeAll();
+    toast('Dados reiniciados.');
+  } catch (err) {
+    console.error(err);
+    toast('Não foi possível reiniciar agora. Verifique a conexão e tente novamente.');
+  }
+});
+
+// ---------- Boot ----------
+function renderAll(){ renderDashboard(); renderBiblioteca(); renderMatriz(); renderSintese(); }
+async function initPersistence(){
+  const hasClaude = window.claude && typeof window.claude.use === 'function';
+  try { if (hasClaude) db = await window.claude.use('db'); } catch(e) { db = null; }
+  try { if (hasClaude) downloadsCap = await window.claude.use('downloads'); } catch(e) { downloadsCap = null; }
+  const statusEl = document.getElementById('storage-status');
+  const resetBtn = document.getElementById('btn-reset-data');
+  if (db) {
+    if (statusEl) statusEl.textContent = 'Sincronizado com sua conta Claude — os mesmos dados aparecem em qualquer aparelho';
+    if (resetBtn) resetBtn.textContent = 'Apagar todos os dados';
+    db.collection('artigos').onSnapshot(snap=>{
+      state.artigos = snap.docs.map(d=>({id:d.id, ...d.data()}));
+      renderAll();
+    }, err=> console.warn('db artigos:', err));
+    db.collection('requisitos').onSnapshot(snap=>{
+      state.requisitos = snap.docs.map(d=>({id:d.id, ...d.data()}));
+      renderAll();
+    }, err=> console.warn('db requisitos:', err));
+  } else {
+    if (statusEl) statusEl.textContent = 'Dados salvos apenas neste navegador — use Exportar/Importar backup para levar a outro aparelho';
+    if (resetBtn) resetBtn.textContent = 'Apagar todos os dados locais';
+    state = loadLocal();
+    renderAll();
+  }
+  switchSinteseTab('abnt');
+  showSection(location.hash.slice(1) || 'dashboard');
+}
+initPersistence();
+
+// Autoteste mínimo do parser de BibTeX (rodar com ?selftest na URL).
+function _selftest(){
+  const sample = "@article{doe2020test, title={A Test}, author={Doe, J.}, year={2020}, journal={J. Test}}";
+  const r = parseBibtex(sample);
+  console.assert(r.titulo === 'A Test', 'parseBibtex: titulo falhou', r);
+  console.assert(r.ano === '2020', 'parseBibtex: ano falhou', r);
+  console.assert(r.bibtexKey === 'doe2020test', 'parseBibtex: key falhou', r);
+  console.log('selftest ok');
+}
+if (location.search.includes('selftest')) _selftest();
+
+})();
+</script>
+</body>
+</html>
