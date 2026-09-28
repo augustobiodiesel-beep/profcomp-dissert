@@ -1,989 +1,723 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel PROFCOMP</title>
-<link href="https://fonts.googleapis.com" rel="preconnect">
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<script id="tailwind-config">
-tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "secondary-fixed": "#dbe1ff", "surface-container-low": "#eff4ff", "primary": "#00152f", "primary-container": "#0f2a4a", "tertiary-fixed": "#85f8c4", "surface-bright": "#f8f9ff", "tertiary-container": "#00301f", "tertiary": "#00190e", "on-secondary-fixed-variant": "#003ea8", "on-primary-fixed": "#001c3a", "surface-container-lowest": "#ffffff", "error": "#ba1a1a", "outline-variant": "#c4c6cf", "on-tertiary-fixed": "#002114", "on-error-container": "#93000a", "inverse-on-surface": "#ebf1ff", "inverse-surface": "#233144", "surface-container-high": "#dde9ff", "on-surface": "#0d1c2f", "primary-fixed-dim": "#b0c8f0", "secondary-container": "#316bf3", "inverse-primary": "#b0c8f0", "background": "#f8f9ff", "surface-container": "#e6eeff", "on-secondary-fixed": "#00174b", "surface-dim": "#ccdbf4", "on-error": "#ffffff", "on-primary": "#ffffff", "surface-tint": "#485f82", "on-secondary-container": "#fefcff", "on-tertiary-fixed-variant": "#005137", "surface-container-highest": "#d5e3fd", "error-container": "#ffdad6", "on-background": "#0d1c2f", "on-tertiary-container": "#24a375", "surface": "#f8f9ff", "secondary": "#0051d5", "tertiary-fixed-dim": "#68dba9", "primary-fixed": "#d4e3ff", "on-secondary": "#ffffff", "on-surface-variant": "#43474e", "on-primary-container": "#7a92b7", "outline": "#74777f", "surface-variant": "#d5e3fd", "on-primary-fixed-variant": "#304869", "on-tertiary": "#ffffff", "secondary-fixed-dim": "#b4c5ff" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-sm": "0.5rem", "space-md": "1rem", "margin": "2rem", "gutter": "1.5rem", "space-xs": "0.25rem", "space-lg": "1.5rem", "space-xl": "2.5rem" }, "fontFamily": { "label-code": ["JetBrains Mono"], "label-tag": ["Hanken Grotesk"], "headline-md": ["Hanken Grotesk"], "body-lg": ["\"Source Sans 3\""], "headline-lg": ["Hanken Grotesk"], "body-sm": ["\"Source Sans 3\""], "headline-sm": ["Hanken Grotesk"], "body-md": ["\"Source Sans 3\""], "caption": ["\"Source Sans 3\""] }, "fontSize": { "label-code": ["13px", { "lineHeight": "18px", "fontWeight": "500" }], "label-tag": ["12px", { "lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "600" }], "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }], "headline-lg": ["30px", { "lineHeight": "38px", "fontWeight": "600" }], "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-sm": ["19px", { "lineHeight": "26px", "fontWeight": "600" }], "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }], "caption": ["11px", { "lineHeight": "16px", "fontWeight": "500" }] } } } };
-</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gerador de Guia de Aprendizagem</title>
 <style>
-  html,body{margin:0;padding:0;}
-  ::-webkit-scrollbar{width:8px;height:8px;}
-  ::-webkit-scrollbar-thumb{background:#c4c6cf;border-radius:8px;}
-  @media (max-width: 767px){
-    #sidebar{ transform: translateX(-100%); transition: transform .2s ease; }
-    #sidebar.open{ transform: translateX(0); }
-    #app-shell{ padding-left: 0 !important; }
-    header{ left: 0 !important; }
-  }
+:root{--bg:#f4f6f8;--panel:#fff;--bd:#d7dce2;--accent:#1f6fb2;--txt:#1c2733;--txt-subtle:#66727e}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--txt)}
+.app{display:grid;grid-template-columns:420px 1fr;height:100vh}
+.form{overflow-y:auto;padding:16px;border-right:1px solid var(--bd);background:var(--panel)}
+.prev{display:flex;flex-direction:column;background:#8a8f98}
+.prev iframe{flex:1;border:0;width:100%;background:#8a8f98}
+h1{font-size:16px;margin:0 0 4px}
+.sub{font-size:12px;color:var(--txt-subtle);margin:0 0 14px}
+fieldset{border:1px solid var(--bd);border-radius:8px;margin:0 0 14px;padding:10px 12px}
+legend{font-size:12px;font-weight:600;padding:0 4px}
+label{display:block;font-size:11.5px;color:var(--txt-subtle);margin:8px 0 2px}
+label:first-child{margin-top:0}
+input,select,textarea{width:100%;font:inherit;font-size:12.5px;padding:6px 8px;border:1px solid var(--bd);border-radius:6px;background:#fff;color:var(--txt)}
+textarea{resize:vertical;min-height:52px;line-height:1.4}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.warn{background:#fff4e5;border:1px solid #f0c374;border-radius:8px;padding:8px 10px;font-size:11.5px;color:#7a4b00;margin-bottom:14px}
+.btn{cursor:pointer;border:1px solid var(--bd);background:#eef1f4;border-radius:6px;padding:8px 10px;font-size:12.5px;font-weight:600;color:var(--txt)}
+.btn:hover{background:#e4e8ec}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:#195c94}
+.btn:disabled{opacity:.55;cursor:default}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.status{font-size:11.5px;color:var(--txt-subtle);min-height:16px;margin-bottom:10px}
+details.cfgbox{border:1px solid var(--bd);border-radius:8px;margin-bottom:14px;padding:8px 12px;background:#fbfcfd}
+details.cfgbox summary{cursor:pointer;font-size:12.5px;font-weight:600}
+.hint{font-size:10.5px;color:var(--txt-subtle);margin-top:2px}
+.seccard{border:1px solid var(--bd);border-radius:8px;padding:8px 10px;margin-bottom:10px}
+.seccard>label{font-weight:600;color:var(--txt)}
+.filebtn{display:inline-block}
+.filebtn input{display:none}
+@media (max-width:900px){.app{grid-template-columns:1fr;height:auto}.prev iframe{height:80vh}}
 </style>
 </head>
-<body class="bg-background font-body-md text-on-surface min-h-screen antialiased">
+<body>
+<div class="app">
+  <div class="form">
+    <h1>Gerador de Guia de Aprendizagem</h1>
+    <p class="sub">Preencha os dados-chave, gere o conteúdo com IA e ajuste os campos antes de baixar o PDF.</p>
 
-<aside id="sidebar" class="fixed left-0 top-0 h-full w-72 bg-surface-container-low z-40 overflow-y-auto shadow-[0_1px_8px_rgba(0,0,0,0.08)]">
-  <div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-lowest/70">
-    <span class="material-symbols-outlined text-primary text-3xl">school</span>
-    <div class="flex flex-col min-w-0 leading-tight">
-      <span class="font-headline-sm text-headline-sm text-primary">PROFCOMP</span>
-      <span class="font-caption text-caption text-on-surface-variant uppercase tracking-wider">Mestrado Profissional UFMA</span>
-    </div>
-  </div>
-  <nav class="p-space-sm space-y-1" id="nav">
-    <button data-path="dashboard" title="Ver o painel geral: metas, indicadores e artigos recentes." class="nav-btn w-full text-left flex items-center gap-space-sm px-space-sm py-space-sm rounded-xl transition-colors">
-      <span class="material-symbols-outlined text-xl">dashboard</span>
-      <span class="font-label-tag text-label-tag">Dashboard &amp; Panorama</span>
-    </button>
-    <button data-path="biblioteca" title="Listar, buscar, cadastrar e editar o fichamento de cada artigo." class="nav-btn w-full text-left flex items-center gap-space-sm px-space-sm py-space-sm rounded-xl transition-colors">
-      <span class="material-symbols-outlined text-xl">local_library</span>
-      <span class="font-label-tag text-label-tag">Biblioteca &amp; Fichamento</span>
-    </button>
-    <button data-path="matriz" title="Vincular requisitos do produto às evidências da literatura." class="nav-btn w-full text-left flex items-center gap-space-sm px-space-sm py-space-sm rounded-xl transition-colors">
-      <span class="material-symbols-outlined text-xl">schema</span>
-      <span class="font-label-tag text-label-tag">Matriz do Produto</span>
-    </button>
-    <button data-path="sintese" title="Gerar as referências em ABNT e BibTeX a partir dos artigos cadastrados." class="nav-btn w-full text-left flex items-center gap-space-sm px-space-sm py-space-sm rounded-xl transition-colors">
-      <span class="material-symbols-outlined text-xl">history_edu</span>
-      <span class="font-label-tag text-label-tag">Síntese &amp; Dissertação</span>
-    </button>
-  </nav>
-  <div class="p-space-md space-y-1">
-    <button id="btn-export-json" title="Baixa um arquivo .json com todos os seus artigos e requisitos. Leve esse arquivo para outro aparelho (e-mail, nuvem, pendrive) e use &quot;Importar backup&quot; lá para continuar com os mesmos dados." class="w-full text-left font-caption text-caption text-secondary hover:underline block">Exportar backup (.json)</button>
-    <button id="btn-import-json" title="Carrega um arquivo .json exportado deste app em outro aparelho, substituindo os dados atuais deste navegador pelos do arquivo." class="w-full text-left font-caption text-caption text-secondary hover:underline block">Importar backup (.json)</button>
-    <input type="file" id="import-file-input" accept="application/json" hidden>
-    <button id="btn-reset-data" title="Apaga todos os artigos e requisitos salvos neste navegador. Não pode ser desfeito — exporte um backup antes, se quiser guardar os dados." class="w-full text-left font-caption text-caption text-error hover:underline block">Apagar todos os dados locais</button>
-  </div>
-</aside>
+    <div class="warn">⚠️ A IA pode errar ou inventar códigos BNCC, normas técnicas e referências bibliográficas. Revise todo o conteúdo gerado antes de usar oficialmente o documento.</div>
 
-<div id="app-shell" class="pl-72">
-  <header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-30 px-gutter flex items-center gap-space-md">
-    <button id="btn-toggle-sidebar" title="Mostrar/ocultar o menu lateral" class="md:hidden p-1"><span class="material-symbols-outlined">menu</span></button>
-    <div class="relative flex-1 max-w-xl">
-      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg pointer-events-none">search</span>
-      <input id="global-search" title="Digite um termo e aperte Enter para buscar na Biblioteca" class="w-full bg-surface-container-low text-on-surface placeholder:text-on-surface-variant font-body-sm text-body-sm pl-9 pr-3 py-space-xs rounded-xl focus:outline-none focus:bg-surface-container-lowest transition-all" placeholder="Buscar na Biblioteca (Enter)" type="search">
-    </div>
-    <span id="storage-status" class="font-caption text-caption text-on-surface-variant hidden sm:inline" title="Onde seus dados estão sendo guardados.">Verificando...</span>
-  </header>
+    <details class="cfgbox" id="cfgbox" open>
+      <summary>Configuração de IA</summary>
 
-  <main class="pt-16 bg-surface w-full px-gutter min-h-screen pb-space-xl">
-
-    <!-- ================= DASHBOARD ================= -->
-    <section id="section-dashboard" class="py-space-md">
-      <div class="rounded-xl overflow-hidden bg-gradient-to-r from-primary via-primary-container to-secondary p-space-lg text-on-primary my-space-md">
-        <h1 class="font-headline-lg text-headline-lg font-bold">Panorama da Revisão</h1>
-        <p class="font-body-md text-body-md text-surface-container-high/90 mt-1">Visão geral do referencial teórico e da matriz de rastreabilidade do produto.</p>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-space-md mb-space-lg" id="kpi-grid"></div>
-      <div class="grid grid-cols-1 xl:grid-cols-3 gap-space-lg mb-space-lg">
-        <div class="xl:col-span-2 bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
-          <h2 class="font-headline-sm text-headline-sm text-primary font-bold mb-space-sm">Distribuição por Qualis CAPES</h2>
-          <div id="qualis-list" class="space-y-space-sm"></div>
-        </div>
-        <div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-sm">
-          <h2 class="font-headline-sm text-headline-sm text-primary font-bold">Ações Rápidas</h2>
-          <button id="btn-new-artigo" title="Abrir o formulário para cadastrar um novo artigo e seu fichamento." class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-primary text-on-primary font-label-tag text-label-tag hover:bg-primary-container transition-colors">
-            <span class="material-symbols-outlined text-base">add</span> Novo Artigo
-          </button>
-          <button id="btn-import-bibtex" title="Abrir o formulário de novo artigo já com a opção de colar um BibTeX para preencher os campos automaticamente." class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-surface-container-low text-primary font-label-tag text-label-tag hover:bg-surface-container-high transition-colors">
-            <span class="material-symbols-outlined text-base">file_download</span> Importar via BibTeX
-          </button>
-          <button id="btn-export-resumo" title="Copiar um resumo em texto de todos os artigos para colar em e-mail ou mensagem ao orientador." class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-surface-container-low text-primary font-label-tag text-label-tag hover:bg-surface-container-high transition-colors">
-            <span class="material-symbols-outlined text-base">content_copy</span> Copiar Resumo p/ Orientador
-          </button>
+      <div id="semChaveMsg">
+        <p class="hint" style="margin-top:0">Ainda não tem uma chave configurada. Escolha uma opção:</p>
+        <div class="actions" style="margin-bottom:6px">
+          <button class="btn" id="mostrarTutorial" type="button">📘 Quero pegar minha própria chave grátis</button>
+          <button class="btn" id="mostrarImportar" type="button">📥 Recebi um código de um colega</button>
         </div>
       </div>
-      <section class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden mb-space-lg">
-        <div class="p-space-md flex items-center justify-between">
-          <h2 class="font-headline-sm text-headline-sm text-primary font-bold">Artigos Recentes</h2>
-          <span class="font-caption text-caption text-on-surface-variant">últimos 5</span>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left font-body-sm text-body-sm">
-            <thead class="bg-surface-container-low font-caption text-caption text-on-surface-variant uppercase">
-              <tr><th class="py-space-sm px-space-md">Título</th><th class="py-space-sm px-space-sm">Ano</th><th class="py-space-sm px-space-sm">Qualis</th><th class="py-space-sm px-space-sm">Status</th><th class="py-space-sm px-space-md text-right">Ação</th></tr>
-            </thead>
-            <tbody id="recent-table-body"></tbody>
-          </table>
-        </div>
-      </section>
-    </section>
 
-    <!-- ================= BIBLIOTECA ================= -->
-    <section id="section-biblioteca" class="py-space-md" hidden>
-      <div class="flex flex-wrap items-center justify-between gap-space-sm mb-space-md">
-        <h1 class="font-headline-lg text-headline-lg text-primary font-bold">Biblioteca &amp; Fichamento</h1>
-        <button id="btn-new-artigo-2" title="Abrir o formulário para cadastrar um novo artigo e seu fichamento." class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-primary text-on-primary font-label-tag text-label-tag hover:bg-primary-container transition-colors">
-          <span class="material-symbols-outlined text-base">add</span> Novo Artigo
-        </button>
+      <div id="tutorialChave" style="display:none">
+        <ol class="hint" style="padding-left:16px;margin:4px 0 10px" id="tutorialPassos"></ol>
       </div>
-      <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm space-y-space-sm mb-space-md">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-space-sm">
-          <input id="bib-search" type="text" title="Filtra a lista por título, autor, síntese ou tag." placeholder="Filtrar por título, autor, tag..." class="md:col-span-2 bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm focus:outline-none">
-          <select id="bib-status" title="Filtrar por status de leitura." class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
-            <option value="all">Todos os status</option>
-            <option value="Fichado">Fichado</option>
-            <option value="Em Leitura">Em Leitura</option>
-            <option value="Não Lido">Não Lido</option>
-          </select>
-          <select id="bib-qualis" title="Filtrar por classificação Qualis CAPES." class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
-            <option value="all">Qualquer Qualis</option>
-          </select>
-        </div>
-        <div id="bib-tags" class="flex items-center gap-space-xs overflow-x-auto pb-1"></div>
-      </div>
-      <div class="grid grid-cols-1 xl:grid-cols-12 gap-space-md items-start">
-        <section class="xl:col-span-5 flex flex-col gap-space-sm" id="biblioteca-list-wrap">
-          <span class="font-label-tag text-label-tag text-on-surface-variant" id="bib-counter"></span>
-          <div id="biblioteca-list" class="flex flex-col gap-space-sm"></div>
-        </section>
-        <section class="xl:col-span-7" id="biblioteca-detail"></section>
-      </div>
-    </section>
 
-    <!-- ================= MATRIZ ================= -->
-    <section id="section-matriz" class="py-space-md" hidden>
-      <div class="flex flex-wrap items-center justify-between gap-space-md rounded-xl overflow-hidden bg-gradient-to-r from-primary via-primary-container to-secondary p-space-lg text-on-primary mb-space-lg">
-        <div>
-          <h1 class="font-headline-lg text-headline-lg font-bold">Matriz de Síntese: Teoria → Produto</h1>
-          <p class="font-body-md text-body-md text-surface-container-high/90 mt-1">Cada requisito do produto deve estar ancorado em evidência da literatura.</p>
-        </div>
-        <div class="flex items-center gap-space-md">
-          <div class="text-right">
-            <span class="font-caption text-caption text-surface-container-highest uppercase block">Cobertura</span>
-            <span class="font-headline-lg text-headline-lg font-bold" id="matriz-cobertura">—</span>
-          </div>
-          <button id="btn-add-vinculo" title="Cadastrar um novo requisito do produto e, se quiser, vinculá-lo a um artigo já fichado." class="inline-flex items-center gap-space-xs px-space-md py-space-sm bg-tertiary-container hover:bg-tertiary text-tertiary-fixed font-label-tag text-label-tag rounded-xl transition-all">
-            <span class="material-symbols-outlined text-lg">add_link</span> Nova Vinculação
-          </button>
-        </div>
+      <label for="aiProvider">Provedor</label>
+      <select id="aiProvider" data-cfg="provider"></select>
+      <p class="hint" id="provedorAviso" style="display:none"></p>
+      <label for="apiKey">Chave de API</label>
+      <input type="password" id="apiKey" data-cfg="apiKey" placeholder="Cole sua chave aqui">
+      <div class="actions" style="margin:6px 0 0">
+        <button class="btn" id="testarChave" type="button">Testar chave</button>
+        <span class="status" id="statusChave" style="margin:0"></span>
       </div>
-      <div class="grid grid-cols-1 xl:grid-cols-4 gap-space-lg">
-        <div class="xl:col-span-1 bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-md h-fit">
-          <div>
-            <label class="font-label-tag text-caption uppercase text-on-surface-variant tracking-wider block mb-1">Buscar</label>
-            <input id="mtz-search" type="text" title="Buscar por código, título ou conceito do requisito." placeholder="Código, título, conceito..." class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm focus:outline-none">
-          </div>
-          <div>
-            <label class="font-label-tag text-caption uppercase text-on-surface-variant tracking-wider block mb-1">Módulo</label>
-            <div id="mtz-modulos" class="flex flex-col gap-1"></div>
-          </div>
-          <div>
-            <label class="font-label-tag text-caption uppercase text-on-surface-variant tracking-wider block mb-1">Tipo</label>
-            <div id="mtz-tipos" class="grid grid-cols-2 gap-1"></div>
-          </div>
-          <div>
-            <label class="font-label-tag text-caption uppercase text-on-surface-variant tracking-wider block mb-1">Status</label>
-            <div id="mtz-status" class="flex flex-col gap-1"></div>
-          </div>
-        </div>
-        <div class="xl:col-span-3 flex flex-col gap-space-md" id="matriz-list"></div>
+      <p class="hint">Guardada só neste navegador (localStorage) — nunca é enviada para o repositório nem para ninguém além do provedor escolhido.</p>
+
+      <div id="modelGroup">
+        <label for="aiModel">Modelo</label>
+        <select id="aiModel" data-cfg="model"></select>
       </div>
-    </section>
 
-    <!-- ================= SINTESE ================= -->
-    <section id="section-sintese" class="py-space-md" hidden>
-      <h1 class="font-headline-lg text-headline-lg text-primary font-bold mb-space-md">Síntese &amp; Exportação Canônica</h1>
-      <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm">
-        <div class="flex items-center justify-between mb-space-md">
-          <div class="grid grid-cols-2 p-1 bg-surface-container rounded-lg gap-1 font-label-tag text-label-tag">
-            <button id="tab-btn-abnt" title="Mostrar as referências no formato ABNT NBR 6023." class="py-1.5 px-space-md rounded-md bg-surface-container-lowest text-primary font-bold shadow-xs">ABNT NBR 6023</button>
-            <button id="tab-btn-bibtex" title="Mostrar as referências no formato BibTeX, para LaTeX/Overleaf." class="py-1.5 px-space-md rounded-md text-on-surface-variant">BibTeX (LaTeX)</button>
-          </div>
-          <div class="flex items-center gap-space-xs">
-            <button id="btn-copy-export" title="Copiar todo o bloco de referências exibido para a área de transferência." class="inline-flex items-center gap-1 px-space-sm py-1 bg-surface-container-high hover:bg-surface-container text-primary rounded-lg font-label-tag text-caption">
-              <span class="material-symbols-outlined text-sm">content_copy</span> Copiar
-            </button>
-            <button id="btn-print-export" title="Abrir a janela de impressão do navegador para gerar um PDF das referências." class="inline-flex items-center gap-1 px-space-sm py-1 bg-surface-container-high hover:bg-surface-container text-primary rounded-lg font-label-tag text-caption">
-              <span class="material-symbols-outlined text-sm">print</span> Imprimir / PDF
-            </button>
-          </div>
-        </div>
-        <pre id="export-abnt" class="p-space-md bg-surface-container-low rounded-lg font-body-sm text-body-sm whitespace-pre-wrap leading-relaxed"></pre>
-        <pre id="export-bibtex" class="p-space-md bg-primary text-primary-fixed rounded-lg font-label-code text-label-code whitespace-pre-wrap leading-relaxed" hidden></pre>
-      </div>
-    </section>
-
-  </main>
-</div>
-
-<!-- ================= MODAL ARTIGO ================= -->
-<div id="modal-artigo" class="fixed inset-0 bg-primary/60 backdrop-blur-sm z-50 hidden items-center justify-center p-space-md overflow-y-auto">
-  <div class="bg-surface-container-lowest rounded-xl shadow-2xl max-w-2xl w-full p-space-lg my-space-lg space-y-space-sm">
-    <div class="flex items-center justify-between">
-      <h3 id="ma-title" class="font-headline-sm text-headline-sm text-primary font-bold">Novo Artigo</h3>
-      <button class="modal-close p-1 text-on-surface-variant hover:text-primary" data-modal="modal-artigo" title="Fechar sem salvar"><span class="material-symbols-outlined">close</span></button>
-    </div>
-    <details class="bg-surface-container-low rounded-lg p-space-sm">
-      <summary class="font-label-tag text-label-tag text-secondary cursor-pointer" title="Clique para abrir um campo onde você pode colar um BibTeX (ex: exportado do Google Scholar ou Mendeley) e preencher os campos abaixo automaticamente.">Colar BibTeX para preencher automaticamente</summary>
-      <textarea id="ma-bibtex-paste" rows="3" title="Cole aqui o texto de uma entrada BibTeX." class="w-full mt-space-xs bg-surface-container-lowest p-space-xs rounded font-label-code text-caption" placeholder="@article{chave2024, title={...}, author={...}, year={2024}, journal={...}}"></textarea>
-      <button id="ma-parse-btn" type="button" title="Ler o BibTeX colado acima e preencher título, autores, ano, periódico e DOI." class="mt-1 px-space-sm py-1 rounded bg-surface-container-high text-primary font-label-tag text-caption">Analisar BibTeX</button>
+      <details style="margin-top:10px">
+        <summary style="font-size:11.5px;cursor:pointer">Compartilhar esta chave com colegas / importar código recebido</summary>
+        <p class="hint">Se você já configurou sua chave acima, gere um código e mande por WhatsApp/e-mail para seus colegas — eles colam o código e já ficam prontos para usar, sem precisar criar conta em lugar nenhum. O código nunca é salvo neste arquivo nem em nenhum lugar além do navegador de quem colar.</p>
+        <button class="btn" id="gerarCodigo" type="button">Gerar código para compartilhar</button>
+        <textarea id="codigoCompartilhar" readonly placeholder="O código aparece aqui depois de clicar em cima" style="min-height:44px;margin-top:6px"></textarea>
+        <label for="codigoImportar" style="margin-top:10px">Colar código recebido de um colega</label>
+        <textarea id="codigoImportar" placeholder="Cole aqui o código que seu colega te mandou" style="min-height:44px"></textarea>
+        <button class="btn" id="aplicarCodigo" type="button" style="margin-top:6px">Aplicar código</button>
+      </details>
     </details>
-    <input id="ma-titulo" title="Título completo do artigo (obrigatório)." placeholder="Título do artigo" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
-    <div class="grid grid-cols-2 gap-space-sm">
-      <input id="ma-autores" title="Autores no formato Sobrenome, Inicial (ex: Silva, R. M.)." placeholder="Autores (Sobrenome, N.)" class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
-      <input id="ma-ano" type="number" title="Ano de publicação." placeholder="Ano" class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
-    </div>
-    <div class="grid grid-cols-2 gap-space-sm">
-      <input id="ma-venue" title="Nome do periódico, evento ou instituição." placeholder="Periódico / Evento" class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
-      <input id="ma-doi" title="DOI do artigo, se houver (ex: 10.1109/TLT.2023.3289012)." placeholder="DOI (opcional)" class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
-    </div>
-    <div class="grid grid-cols-3 gap-space-sm">
-      <select id="ma-qualis" title="Classificação Qualis CAPES do periódico/evento." class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
-        <option>A1</option><option>A2</option><option>A3</option><option>A4</option><option>B1</option><option>Clássico</option><option>Normativa</option><option>Outro</option>
-      </select>
-      <select id="ma-relevancia" title="Quão importante este artigo é para o seu produto/dissertação." class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
-        <option>Essencial</option><option>Complementar</option><option>Metodológico</option>
-      </select>
-      <select id="ma-status" title="Status de leitura — define automaticamente o progresso mostrado na Biblioteca e no Dashboard (Não Lido = 0%, Em Leitura = 50%, Fichado = 100%)." class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
-        <option>Não Lido</option><option>Em Leitura</option><option>Fichado</option>
-      </select>
-    </div>
-    <input id="ma-tags" title="Palavras-chave separadas por vírgula, usadas para filtrar na Biblioteca." placeholder="Tags (separadas por vírgula)" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
-    <textarea id="ma-sintese" rows="3" title="Seu resumo/análise pessoal do artigo." placeholder="Síntese analítica do artigo" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm"></textarea>
-    <textarea id="ma-aplicacao" rows="2" title="Como este artigo justifica uma decisão do seu produto." placeholder="Aplicação direta no produto do mestrado" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm"></textarea>
-    <textarea id="ma-metodologia" rows="2" title="Metodologia ou validação usada no artigo." placeholder="Metodologia / validação" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm"></textarea>
-    <textarea id="ma-citacoes" rows="2" title="Uma citação direta por linha, no formato: número da página :: trecho citado." placeholder="Citações diretas: uma por linha, no formato  pagina :: trecho" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-label-code text-caption"></textarea>
-    <div class="flex items-center justify-end gap-space-sm pt-space-xs">
-      <button class="modal-close px-space-md py-space-xs rounded-lg font-label-tag text-body-sm text-on-surface-variant hover:bg-surface-container" data-modal="modal-artigo" title="Fechar sem salvar as alterações.">Cancelar</button>
-      <button id="ma-save-btn" title="Salvar este artigo e fechar o formulário." class="px-space-md py-space-xs rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-tag text-body-sm shadow-sm">Salvar Artigo</button>
-    </div>
-  </div>
-</div>
 
-<!-- ================= MODAL REQUISITO ================= -->
-<div id="modal-requisito" class="fixed inset-0 bg-primary/60 backdrop-blur-sm z-50 hidden items-center justify-center p-space-md overflow-y-auto">
-  <div class="bg-surface-container-lowest rounded-xl shadow-2xl max-w-xl w-full p-space-lg my-space-lg space-y-space-sm">
-    <div class="flex items-center justify-between">
-      <h3 id="mr-title" class="font-headline-sm text-headline-sm text-primary font-bold">Vincular Artigo ao Requisito</h3>
-      <button class="modal-close p-1 text-on-surface-variant hover:text-primary" data-modal="modal-requisito" title="Fechar sem salvar"><span class="material-symbols-outlined">close</span></button>
-    </div>
-    <select id="mr-modulo" title="Módulo do produto ao qual este requisito pertence." class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
-      <option value="m1">Módulo 1</option><option value="m2">Módulo 2</option><option value="m3">Módulo 3</option>
-    </select>
-    <div class="grid grid-cols-2 gap-space-sm">
-      <input id="mr-codigo" title="Identificador curto do requisito (ex: RF-15)." placeholder="Código (ex: RF-15)" class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-label-code text-body-sm">
-      <select id="mr-tipo" title="Tipo do requisito: Funcional, Não-Funcional ou Decisão Arquitetural." class="bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
-        <option value="RF">Funcional (RF)</option><option value="RNF">Não-Funcional (RNF)</option><option value="DEC">Decisão Arq. (DEC)</option>
-      </select>
-    </div>
-    <input id="mr-titulo-req" title="Nome curto do requisito ou decisão." placeholder="Título do requisito / decisão" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
-    <textarea id="mr-descricao" rows="2" title="O que este requisito exige do produto." placeholder="Descrição do requisito" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm"></textarea>
-    <select id="mr-status" title="Situação atual da implementação deste requisito." class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
-      <option>Implementado</option><option>Em Validação</option><option>Modelado no Backlog</option>
-    </select>
-    <select id="mr-artigo" title="Artigo da Biblioteca que fundamenta este requisito (opcional)." class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm"></select>
-    <textarea id="mr-justificativa" rows="2" title="Explique por que a evidência escolhida justifica esta decisão técnica." placeholder="Justificativa técnica / arquitetural" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm"></textarea>
-    <input id="mr-capitulo" title="Seção/capítulo da dissertação onde este requisito é discutido." placeholder="Capítulo da dissertação (ex: 4.2.1)" class="w-full bg-surface-container-low px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm">
-    <div class="flex items-center justify-end gap-space-sm pt-space-xs">
-      <button class="modal-close px-space-md py-space-xs rounded-lg font-label-tag text-body-sm text-on-surface-variant hover:bg-surface-container" data-modal="modal-requisito" title="Fechar sem salvar.">Cancelar</button>
-      <button id="mr-save-btn" title="Salvar este requisito e fechar o formulário." class="px-space-md py-space-xs rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-tag text-body-sm shadow-sm">Salvar Vinculação</button>
-    </div>
-  </div>
-</div>
+    <fieldset>
+      <legend>Identificação</legend>
+      <label for="pleno">IEMA Pleno</label>
+      <input id="pleno" data-k="pleno" placeholder="Ex.: São Luís Centro">
+      <label for="curso">Curso</label>
+      <input id="curso" data-k="curso" placeholder="Ex.: Técnico – Turmas 100">
+      <div class="row2">
+        <div><label for="professor">Professor(a)</label><input id="professor" data-k="professor"></div>
+        <div><label for="componente">Componente curricular</label><input id="componente" data-k="componente" placeholder="Ex.: Química"></div>
+      </div>
+      <div class="row2">
+        <div><label for="periodo">Período/Bimestre</label><input id="periodo" data-k="periodo" placeholder="Ex.: 3º Bimestre"></div>
+        <div><label for="serie">Série/Ano</label><input id="serie" data-k="serie" placeholder="Ex.: 1º Ano"></div>
+      </div>
+    </fieldset>
 
-<div id="toast" class="fixed bottom-6 right-6 z-50 translate-y-24 opacity-0 transition-all duration-300 pointer-events-none bg-primary text-on-primary px-space-md py-space-sm rounded-xl shadow-xl flex items-center gap-space-sm">
-  <span class="material-symbols-outlined text-tertiary-fixed text-xl">check_circle</span>
-  <span id="toast-message" class="font-body-sm text-body-sm"></span>
+    <fieldset>
+      <legend>Conteúdo do bimestre</legend>
+      <label for="area">Área de conhecimento (BNCC)</label>
+      <select id="area" data-k="area">
+        <option>Linguagens e suas Tecnologias</option>
+        <option>Matemática e suas Tecnologias</option>
+        <option selected>Ciências da Natureza e suas Tecnologias</option>
+        <option>Ciências Humanas e Sociais Aplicadas</option>
+        <option>Formação Técnica e Profissional</option>
+      </select>
+      <label for="tema">Tema / objeto de conhecimento central</label>
+      <textarea id="tema" data-k="tema" placeholder="Ex.: Funções inorgânicas — ácidos, bases, sais e óxidos"></textarea>
+      <div class="row2">
+        <div><label for="numAulas">Nº de aulas no período</label><input type="number" min="1" id="numAulas" data-k="numAulas"></div>
+        <div><label for="aulasPorSemana">Aulas por semana</label><input type="number" min="1" id="aulasPorSemana" data-k="aulasPorSemana"></div>
+      </div>
+      <label for="competenciasGeraisNums">Competências gerais BNCC (opcional)</label>
+      <input id="competenciasGeraisNums" data-k="competenciasGeraisNums" placeholder="Ex.: 2, 4, 6, 7 — deixe em branco para a IA escolher">
+      <label for="bibliografiaBase">Livro didático / bibliografia já em uso (opcional)</label>
+      <input id="bibliografiaBase" data-k="bibliografiaBase">
+      <label for="contexto">Contexto, observações, turma (opcional)</label>
+      <textarea id="contexto" data-k="contexto" placeholder="Ex.: turmas técnicas integradas, laboratório disponível 1x/semana, contexto local de São Luís..."></textarea>
+    </fieldset>
+
+    <div class="actions">
+      <button class="btn primary" id="gerar">✨ Gerar guia completo com IA</button>
+      <button class="btn" id="pdf">Baixar PDF</button>
+    </div>
+    <div class="actions">
+      <button class="btn" id="expGuia">Salvar guia (.json)</button>
+      <label class="btn filebtn">Abrir guia (.json)<input type="file" id="impGuia" accept="application/json"></label>
+      <button class="btn" id="nova">Novo guia</button>
+    </div>
+    <div class="status" id="status"></div>
+
+    <fieldset>
+      <legend>Conteúdo gerado (editável)</legend>
+      <div id="editorSecoes"></div>
+    </fieldset>
+
+    <p class="hint" style="text-align:center;margin-top:18px">
+      Desenvolvido por José Augusto Sousa Lima Junior — <a href="mailto:augustobiodiesel@gmail.com">augustobiodiesel@gmail.com</a>
+    </p>
+  </div>
+  <div class="prev"><iframe id="prev" title="Prévia do guia"></iframe></div>
 </div>
 
 <script>
-(function(){
-'use strict';
-// Persistência: um único blob JSON em localStorage[STORAGE_KEY].
-// Esquema: { artigos: Artigo[], requisitos: Requisito[] }
-const STORAGE_KEY = 'profcomp-mestrado-v1';
+// ---------- Logos embutidos (extraídos do modelo IEMA) ----------
+const LOGO_IEMA = 'data:image/jpeg;base64,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';
+const BRASAO_MA = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wgARCACXAJcDASIAAhEBAxEB/8QAHAAAAgMBAQEBAAAAAAAAAAAAAAYEBQcCCAMB/8QAGwEAAQUBAQAAAAAAAAAAAAAABQADBAYHAgH/2gAMAwEAAhADEAAAAfVICQAkAJRMcb/KrIp49RZtrHUjxnvqZhTQv3uUF/JsIAkAJACQAkAJAZX42q4dGa4la2zYfE/q58xk2LNywwF9Laf4O9fvmXIB0kAJACQAkGeyYLrziWxLcyN45uGeZFrXKjuaKKs6yveis9LCsv8AW3nL2P22Fcn9HdBEl2SAHuSlujlYpHZKXHLRU6vnkUxF03Jn7LykaXze5wy2wXOftAznfKOJn9w87+0jvJ7FF3RGedargBYIQAkhqT7n+aneqa3UBRNO+jH9NcA/NcdVGEMqAGMoZH3Hp1Zuuw/HiRnmq6A1LzDv1NAOkAJIqM1JmW2BPrGiTeHk4cSY0nVmiJ3NepjkYyjo5EnJ6x7Xc713QHJFetP5AJjYAkgoDsp5gf2riFY6KE+X4nMsbuau21eC7hn2MLL/ABPsJVCk3J5qTobklOu/1kAltmcSEinE/nJnRcxPtvaJpmp1/mtZOj0KRUWeU1iU+kOZiBICr69XPhCnWObXaCrVJyPvYrGwVlCi8WWQ2aujPPyc5QLyBBiO6XIy75lYzwlcRIzjbc55Nr7jiuQOfe+5ctmMtKw3Krft4LRehFm9gUjtABiMKYN+p+WhTyl40gehqEEKwR0lzC0jWoApHEMGO14AVI//xAArEAACAgIBAgQGAgMAAAAAAAADBAIFAQYAEhMUFSAhBxARFyIwFiQjMTT/2gAIAQEAAQUC9TTYEQblueIc1XYy0Vm+xNRBy3nYXuobcK1rv2759M6ssNWBdK1ZRNXm8auinOMRsY1/veQ/stviJVW9SKc5c1PcVmWubTsqmxZEYcj0e/J3bX6/iFcyr6kq8YhraHFzfl7tM/tTfgtc1VCb98RFmAxRKqHUrLFlSfq+KcoirGfcFrQFqDS16Vrrr+yWjCVzS5oISRalUSngY9GwTGpetna8zMpt6RRrtgcxtq7jeu0OrMXlrboGvNy2IiaVHmrCNRoot5o9VpAlOPXbWdnxqxUQyXdUpcrtnGwX53ceum8UKana7h4Rys7r9z5upswyEpHjwOidg9jcdxYkvGMIGNJdQVQMwqm/vvLZw7xsYjgRrHonV+jcaxNWmY/CRMe6NktX7A/sU2eDskzuipljEv6tWrdXtJRknZCf4jtEY5GwJ93q+o8/jDVa5XyH0bx764x7kz+cLKxDXDNfntGG6ZK/v/s2xx/V56oz8k75lbCpRtCx9JYxnrV1T21f0bSLvUxZfQ8RFnhnSbhsv2/s+D0S2FP+JX/LWtcrGvmm5NMsDRKMOPy10fa1/wBG2YJIZM/nat7GJ7zbe+ebb3zzbe+ebb3w7Nwyb0UTXsCXUbUcExQ+jZ2CYtzy6eL/ABAsFwfcey59x7Ln3Hsufcey5b3pr1vqxzqxzqxzqxxUvbZDn6l1JubC/o2ZYfimI9U+wLOO0L6dsOJZCPGe0PGGwD8f2B87A+dgfOwPliGHgV8f2NWWGJH0be4v2mf8bVcSJUM4l9djJkJFskeWVgPJG/d/0Wc+kCs+gWpHXlT/ADv7VsvFwgRiQPcW1iw7wba2mo9a9iVfr8sMU4g9jDf/AH+i6Z655h2xmCM0tfuXGCc2x7GAY7Wc4nIeJZ7fO5mva/r2Y2h5OpVgwlWOvirwFuGinUag4H5Pt+GGt+coe+CZkWBhrM816xE4g6YrluIuejPtyZunmHIA4pM1bMuwYKBW9jgmzs/3e/jv0zUYMzsu7LNrnslhlnmW8Myibqzj/ZDZxzWxEBe9eDSr4O3EP4671Ho7EcrEMUcCUYTj5kEvGLHPIOybYhcV0xsn8MwJ/wBvMxQyVQrGE0pMjDSWUzMUL8BWDBKjM2S0hY1tmtHX6qVUv82dYROVygfhETCBBKUDbax6e3dpLNE1eQ0lFRqUViaCetJLZ+eyVTDTRKN5yP8A/8QANBEAAgEDAgQEAwUJAAAAAAAAAQIDAAQREiEFEBNBFDEyUSCBkQYVImFxIzNCUqGxwfDx/9oACAEDAQE/Aed3cMp6CbE96tI5IogshzRklspGeRsg9vjdxGpZqaQ37Jlds/T/ALVpcGZW6gwVNO0lzpuNHcj/AH9Ks7sXOR3Hw9KTGrFSLqQqajtJvDnbfNRcNaVSwbH+TT2ji4AHpA9/KuGwvFqLjFKrN5CmUocNyFQT+IBOPKr2FSuvvVu3QQ9bYN/WrriENhal13Ixt8996teKWdwf2LjW3Y/2qG3LS6H2pVCjAq5uPEEbeXPh/oamwwK9QIfzr7oEjapr1WOa4/ZxQ2Dus4by2H68uE/aGW3YRXZ1J79xQIbcfBY7Q/OpODX0jF9I+or7jvv5R9RXH+F3VrYPJKu23ce9YrFfZq6aez0P5ocfLtUow7DnZbw4NacbGmTSgf3q3/eDnCO9SHLk8rS2En438qxV3EUbV71qymiraNi2R25oMCri2WYfnRGDg0jLbxL1Nq8ZAf4qBWUe4o2sGnAqEdOMKTQUavxUAo9NG4iT1NS3UL7Bqu4W6pIFSXEkqhW5AlTkVDcu+z7007N51BMXQs1STyS+o8kYowYU91K5zmv/xAA3EQABAgQCBgYKAgMAAAAAAAABAgMABAURElEQEyExQWEGFHGBobEVICIkMkJSkeHwI8GCstH/2gAIAQIBAT8B0rV8ohAIG2LlBufXJtF9ZCFXG2DdXtWhC8XqiellOFoODEOcHaICThidqbMk4ls7c+UApXZSTshpJG+HHm2RdxVoaebfRrGjcaCLi0VOmeinEoCr4rx0eqLoeEsblJ8IqyRPzKBJXW43tNtyRz5wqkTM2ozEwcJOWfOJmWfAaRMpOqb+nnx7oqFTS1I9YljivsuOHM9kOPLdUVOG5P4ikUv0WhYK8WLT0pPvDQyB84pFM64vWOA6sZceUNPsSreqlZcoTbcP7zhTilCxTbRUKM2+krlxhV4GCCm94BuL6ekZxT4GSR5mJNTEowllPD9MdbazhT6HBhTpr0uGn9YPmESa9ZLNrzA8tPSH2Z8LSfl8RGtxAKTuhuY1r7kudhTbvB/bR0nuKW7t+n/YRiOcYjnErfUGJRIRLtpSb2A0VyrOSnu7HxcTlGNSlX4xQp5EwyGVb07uz8bvtnBZSmY6xyt/cdJHELklS9/aVa3cYUkpOEwhBWrCIwhpIbHDzil1Z6QVmjiP+ZQhYcSFp3GJpp+qzrqpZOMX37BHoGop26u/+QhSHpNYJu2vnuPf+34wmsVHWhSt2XA84qDnW5lTraSR5Q7JBZ1tt8Ny4ZN/hv8AfuEIpU4+P4mDbns84eo0+wMamrjkQfzFDnmeooStwXGzKJSlS0i6p5kbTocbQ6nA4LiJ+ky8ukLYum53cPG8NU1pnFqyoXFt/j284nqe21MNMtkgH94xK0yVk9rSNue8/fQ+yiYaU05uMS9Gk5ZGAJv2x//EAEoQAAIBAgMEBAkIBQoHAAAAAAECAwQRABIhEzFBUQUiMmEUIEJxgZGh0fAjM1JikrHB0hAkMHOUFRY0U3KTorKz4TVDY3SCo/H/2gAIAQEABj8C8ZpqmaOnhXtSStlUenD9HdGzjb3KVEsd7xfVU89+vCx47p/1XwwV0kSX21pM2Zue8nNxIxUzxwmokijZ1iXe5A3YfpeKPwOofK6lJtpYhcunVGlhu8+HStqEWupVLTs1kDJ/Wea1r8jy0/bVmbdmj/1Fxs59vDEEIR4CDZrNYZLdbW3FfPim6SYSTVbpdGmULkB+ioJtcW4k+bUfojrkqZKJaicrLaLb9drtn7QI47r8LDBYxOsfziCZw7Dq87D7sdG+E5/CfBo9ptb5s2UXvfj+1emFDUzNUrpHKFSw0s19eem/VeGGADaMwztGftELewtqd+I+hlgkjjjGxpZ2bNtgn0tBlJUX9f6G6MpIxM4YNS1GY5ZJcwGVbDirMAx0+/Ee1heeEjMY0bJnHIt5Po9l7ilpVp546mYdbQZI2AJK349ngOI77fs/BYTOlVU6xyQvkyhWXNre+44TIGtFqi5rHdpr8XwnQ9btKZuttkDqsiWFxa+/huvpr34UzRZ6ihmV2j1Gcob8RuNtD346Rl2rQPsWRJFvcO3VXd3kYoYIjl2TioduSIQfabD046QhXLtaO8czi+RTfKOHE7vcDaPYyyLPGOo8LmM33b/ScQH9ZbYgQGaqWzTFQLvvPHv33/Z0LtFH/SMgqC1nj0J07jl19GnEOVO8b8CnracbTLZWMivmReqDzA00vbd3Y/l3pLpeUrs9mV2ZdrKxQDtDf+OvPENDX1cz0kyxtlZVJKgg3B0JOgOpF9DuOKOWm6TkqIOlISxCZ4g6AC11za9vccVVTTQTR0QlSOeRJAik3GW6363aHDjgsz5frY6M2kSQnZXATit+q3nIsT3n9hl6NplrY1vmmkkMSX5L1Tm8+7dvxapz0lQhCyxsjFY2P17Wt3+u2GME0cwU5WMbBrHlitgoU2tRKoTJ1espIzDradm+JaeVVFNSzmKqcXynKewu43PsB82PBYelYa3wtNpHNpkiS7dQWPWKjgN97nicfzco446lyqwyLInYB1zmwtnvY87tmwkUHUKdVNARqLW7xoLjjx348CWRYelo1WbLIrKucaEjmu8cbZhxxXp0j0klGX/UpKDPGSzaZTe5BKsdLC4Yb94xP0aiCLpCCIz22mXNYjK0befdu9Fv0KKmqhpy1yu1kC3tv34WOjSerqXXOkeyaIW5lmA09Z13YWnrYvAKkjTM+aN7m1lfS53aWG/S/iV67MzXp5Bs1Fy3VOlsLPDINi1jnXlh1LHUX3b7bvjuxFWoVgq3sTUAaZNLoe7434O0Ajq4jlliFxbU2ax4MBf2cMVAjjkmPVLRw9plzDMO/S+nHdipdY5IJKT5RGlhylJB1l0YebFXIKUwRVIXqGS98v8AzCeBy5RYX3Y2Iq4C+mgvv898VrPE4XwM0wmjlymnNtSvO/UPAi2PARSSypsrrHBAZLjcdw83rxRJU5vCFgQSZ2zHNbW544gpoDGauU3O0BIjT6Rt5rDUezCvJM88gvG8kpzBsxGqjhhztCBGuXOd4Hx92JBMmcyR5Nna5YncAOfizVMNHBHUeEQvtUiAa5mW5v68Fh2srYKDdlCebEMq1cQQgw1bSz2VRYlONs2YadxbDQ9Gjq2Iasbchvbqgjrcdd27fiLoyKQFCSWmlfqs2/Vjv9+H2vSsVNYFPkZE6wNvjdhY6Sq8JRowS2YGxueWJTUDb5tb2Gvx5sRxB3pKmI5oJtLqe73ccbLpRVo38mcH5F9NTfyNx0PdqcVjPXbaeeR9mRKGBhDEJktoRblxvfW+JG+qJPT8DFQ/HX7sdDVHg0PhApY22uQZrlNTfxZf30H+smFHoPpIww4yP6rf/MbWUxu+5Rk6xxHFUPsaVmsyxHLp58R0PRcxjhn6wkfW2l93Ddj/AInF/dH348HedagyKHuq25/pCsdtH9ffjNC8aZ9LoljiPSwKmO3L4tie+9lv/hx0P/2cP+QeK6/9WE/+1cE8F3+gH3jGSFc8wGzQDiePx3YMktNGzf210HLH9Ej+2uAyUyIw4rIoxub+/wD98BK3tsgI6+bS58TMu7iOeFlU3VrSAj/Fh0PK3tPvGOjE+jSxD/CPF6OCMVU1YzgHtDZudfTbEh8nj7B+Bwp6JpqoRqljJHBmDMdW4Y7Fd/Cj8uOxXfwo/LjsV38KPy47Fd/Cj8uL9MiYThRk20eQ5dfFamY6dpfuP34DHyh+A9xxEsrs7LLMt2N9BK1h6reL0VThvkmSaQrbeVyAf5j68Nfde3tfEcax0llFtVb82Pm6P7Dfmx83R/Yb82Pm6P7Dfmx83R/Yb82BLUCJWRAo2QtxPfjfjfjfjfiMg8bevTCef8+K6JgoWmqmjW3EFVfX0ufF6NqixEis8CjhZlzH/TGJV5H3nGkaerF9kvf1cZSkYJ3ab8dhefZx80lzwthuovzS8O9sfNr6sfNr6sfNr6sfNr6sTAIoJWw0wF5X+8+/E8yMzGoqHdr8COpp9jxUgyPNXQPHUoiq2gzZSb7uzn0xFJ5J0xTkmzZct+8aHH44hdGAKjUcRx9+I5ZW2SsL7OM/efdh5IAEiygBlHa78N+6X728VQdMzD2a/hiadh32xDBEDHPGoaeFr5lkbrNv7y3d4lXRUiGDLkU1G0s3AsFFvo6XuNT3YHgUCxxW61hlHnw0O9k1U88GE2zdofj7/TjYqoWNMpexs7hjbq4dIRcKblkGg53OKXVqpsvY8ka+V8ejDZmW7HNl8kebDful+9vFyL+7H44WMEDJ12vuxt5VMVWoIhdGIdb/AETiOiroBt1pw/hMb3WQiwa4sMu/7/0R0Md5ZZmBkiQa7LjfUWHDjfUW4hhExpo+PVygn04F1uv0k92FdOsg3W4d2FqIzaJzfN9E4iqtgkrxdVoyAfjnibb/ACUGQ3jQ627z7sU0AGXZxqPZhppWy8MpO848JKda3Z8nJbz8+OM6EHgbG/6bA2cj7I54NSw+TXRBzxnkNlvf+0cHTIv0nw0dSBWAiy3TN592I4RKzVNPGiTpLfOpy8b7/Px1xW1WQQbL9XAkQhmVeJ15liDyOLiQNfXSIn8cXC681RkwS1weZFr+/wBWCkwvTtv+rhWhbPDbQ79OR5jACLllc5fpL8efAjquqf6wDqnz4gpxdgouQO/h7PbjLnOzPlfV7f8AtiVDdFIv1uFuHt9mMsG4eWw3+bHZAbcXbs4aSdjHANWz6F/PyGAQLQr2F5/HLFwSzcxqfj0Y+b15srP+GFbax5gdFK2v7cVbsVbwmBd2mTIfb857MSdJ1gSKSYKWReyvIfWPf/sMLLSwIlK1rTzSbxxsq31HJsuP6fBbl4Kfz4j2L0tQpvnz5orebtXwT0hSSUUdyPCBrHvte43Xv5VsZ6GVZoTrszu9GMs9MFl4q2DeIqTbzd2EllfaOl7tuFgBv4cd/dgU4q6MsVyD5XXdblgsptJmBKtyN/dvHPFti5W2Ui43YC0tMZJeXL042tfMkUa65PJGEkpKGSpjYgbZ7KtvpdbeNd6g4Il8FghtoyM0hv5rL9+GMFRTzScEkRkB/wDK5+7AHSVNsIncRLMrB43Yi9vpcDvGP5Too1q+pkaBm0ZT9FvJ4dx9VjDJ0e1WYNEmidAsnfZmuMT7TLtp5mmcIbqNwFtBwUem/iPNGrUk79qSnbLfW5JXsknmRfEaSQx9KKdC8VomG/yWO7dx47sCemrf1XUmKWJiMSTRdHbToysC5I45VWQr2g+p3em/dgU1SlS0T1L3pxU/KiLJazPm1F82lz2l5WxTVHSVMtNSv+rwAvnZGANs9ufcThp66r+SB0jjU2HvxIkcUfRKDQPLaVz35VNrb+PowHkQ1s4YMJqqzkEG4twX0AeJQ1tOm3amDoYNAxD5dQTyy4FKkHgMZFzPJlYL3BQ2uP/EACgQAQACAgEDBAEFAQEAAAAAAAERIQAxQVFhcSCBkaHBEDCx8PHR4f/aAAgBAQABPyH1QDDgZLBKotD3yT8F4RRoROQhmNVsCRUkGcjWGeKtucnTRXKEMCypFDvWKDUfIyzaKUI7UxgFchGWC4slokoMv3QUBYo5tgA5Eki3AcU3CxUwztPhDraoKbfoGZUFEjQSamfIJmkiwJyBtzw485PX/lztaZm5/dc8U2kbZEZQEWFFcQJoiBKz0NagO8XxuZCpIqDrGlMDjwFaQUzBCAk+0Z6kcaEnfKXReDAU/kKlkiNJD1CGH7gntGInkQJgqe+TsBgWhQo1MSRQgTYHMq0A7gsQhJwogBHLkI9WSGUGg84HHRKyUbDucbrDE0IHgiStHMXinJwlgkvdbjryrCMOnBgQZBZJ6lzzhsEIglBE4yuVBx+20/MtJYnFBWYqxjGdYqw5yRszl9YmKCCkIJRBCJaOpu5csW1bwKVoX0QaUjiyQqYrnIeTKCOipavAhCYrCKQmK0dF5AAxyj+dZKkYAAyVhflp1r9iFUNtCBOgWGjBkxxwR2gUluNymdgRn3hIxlGmEY7mOnESiBTIEr8bjGzmlChWsE3VhuCjBWWCqliZoZAMbvCgBrIN0ZIEIL93NgUglgSayUWPQKSnQCjTIN8lDGg2hid2UniByYx3cmCQ3KJNEhUj9DFKCJwkSuJJ8mTZtTWmDQnBWhbIyfJFUONs3JwQX0OcrtDo5LqMEygEaa2ZUXEkBqU13jEXZDZEgVtajuIgMstzhAFZUNxclWSJYwouQcjI6TBmMFUIuMyHEvZDONubHBqGBcK9Mpd4TdLQsJg0TaZfLFDSYRExNIK3Scb3Broho3Z6M6X3d5LrKZuWcYjBufycNtqRVJmYzPMhCVJgu4AIgiqdwKgEcNVzOHLqAInjlEwB19MpI9FoYTKMnu4Os1PgMN3wL3TP0H1gm3v27SbQFtEgUWsInBOpmBeVWTAgCMqLZklJWLW8WBwp4bqqoeDq8i1QtMIw5NOyVREKjBBo5ZBrAbSxbTSiiAwjeKg9BBtsnqseYI0ExpFmIUUI4U16Fj/124QvU+kjJlrtjFAjMssvMvpCMiU7y9oHg/4nDEMRRPBPxPzlmtdrnS/vHRDH7mJWOvjBFE0JCRUdhD5/TAMGFZGxH1+o5QqBIOzP84CGFoF6N04Nq4PLp7SxP/Us/wDHBDdnpuQST6y/jD2ICPIwq8lKKJvxrfEsZkiCYuAXQZ/TPzmlMTA95z/AYCpJj4BufRJtlH93Jx/uCCHwiEPp+cPiGM7H4MKvip8emQ7AwAwuogr5DDmu0eCtlbjZWlCqpqunp+fPnxGdDkDQgqZ9M1uvhmn4l7OLRrPdfAsDBCCbuAA6AemFDH9tGd0f5jAK2Ne+Ebfxae71ekCBAgR2BSCJOV1zsPnOw+c7D5zsPnI7BjvxZ9LlR1Q8U/GKtCyygNt/Aj0skV5J2it6PfPOId6/PhKKkkrnZnSFZELKsPhkcY9mFHTNxwUeAk7acP8AB5/g8/wef4PJaLNDbR/OeIVPcPJIhdiKr2QPdfTAEQW1Ucc1z7TGM2/suivs4TUSpQ/9AcAHbqHPnFHrTuFB4o+OQwVUBOpt+nlx6vAwOVe41fdxCBk2+kBFCU9D+r3yYRgYLZiWPNYagZTanJGInBDVfrIoMORMILahMEiIKgv6XjqIRb+PbHVYwA04j7MuYVCwTQfmPc6ZSHV/igL1dbxQdSaX2Smpnbgg80sPLb8XxHLGQzTIX+vmWpxzo7PpOV24OVj8Q8riD0Re5Mdpf4xefiyiKYRZvzDWTGgCTc2ZSgSdkE5c5K6FuomTbqi8HFUJ2LqHaGI+sIijoZI/ricApFbvd49OiGMB4Aey+GU93JSMBAg7LqmA9POHD6tiL4PHycNs3J5dl95yhAQHJNROVaQ04UxHdfDBhyUAgnj9RQ8pLrkf9t98g3AS993lftyIkX8L7HHicBA79Sdw/wCxi1GAjCUIQNY+70JUXulfMRZhwALa+xk04QIJNZqIofe7q+MWNl/ihnEchUyn1/g85FZTnYnr269PnHKt2PgH3FmBxkqxHCsPPTTfOdEB1B12NePGBtHjtl48KU03kjGhJs1F9L4ZSqWPvdlCoXbWI4QEtPwT2d/nLYDWokMUbfH3gqTTKlz/AAP4zSzCEeSV/wCPjOmwaz5KPGVIWjnR8jGioyzlUXTe4wFS3uMjyldRwuuM9yuI1aYJkuiABT0MO9S8UozJqri89vhkFiLTWIB1tx7zUXkWCMAU4YIgmdTmhvjS/wAPZDtkl01Dn5Qn2y2KdkhF/a57HF4CSwEIYr5Zy0jJTyCIuUeUVlxck7BasNepRvCZYDEGFDutx8Naxg1cAincT8bw3ziA8vE92fbCdf3kgQyGENhxOMcS+noWQbuXjDLWN61yFKnl+cmnMehi0KsErxkeBCPoEMTtJCjZIsRMEg0lEC9R0zClst7cmJKSc2eXCPQz75tjnBBZQp3qI2FHp7NHTSc8BOSK0WUjpxdwUxi7iSJSEADGIhlC6saahDjTOrYZN7kmoGLtKahcOOhkLkODVuJTJwMGqkR1EszryyXwJBhTAxO2UTKT6DTmUoknAngYkW5AZa3ViI2JL4Am9D//2gAMAwEAAgADAAAAEPPPPJUNPPPPPOelK+PPPPO9HR7z+d/L0h6R6fA3PPFWUF7vCd/PHygwvvkf/PFXsbzjk3/JwTB8d+AY/VLqImLLoVQw/PQgggPIAv/EACYRAQABAgUEAgMBAAAAAAAAAAERACExQVFhcRCBsfCRocHR4SD/2gAIAQMBAT8Q6zMByJgMfu0HM5UBVGmnOa4rvQTssYdkHDC5y3j/AG0UB282oEJtMCPJ0H2N6joUE0PbdqEjTAXCC4ppdfZnGpSSTK0msLPPMf5SKcO1a9hKeMwiCYzhWLIZfJamAKDN7l8IItHOhgIiLrjJMx0w8UY2ljLAn89ohMaVhmlhQ79FCNTrCzOlJgH3+3Ohci2JxTaDbPCpZmgUwjDYgbWaYIsHFzJZS6DxJURbLo2nY58UMGA/tTghDqYZzTxStBbM4ngxzpNJAyjJGRoY4a/K0scRODxQxcpiqWlfu4pqNzLCEgSRz7WpIY6iR1XgpuXviyz0r2r80JQCLJiMhmpaVLSgbfoD8JjgKgzJfPWaBF/pq44hUJskjhPZqDY18VBUFAesqZIhVfl6aWLBrvwe7wCMtKdnDFz/AHE76UMY5z9RRordAKwVbvffxUkbZH967UzYhR8pxhd8UWFnZpaEbWJyeplUhJOuZbDj7oyIfPs0ltJyEv13fx805ZnaXxTFo7ifyps4b606djbz0njDtTbFAmc/kilSIwzgfHG1BIKPuGmVWyxoWPjpipl6mSGxYr//xAAlEQEAAgICAgICAwEBAAAAAAABESEAMUFRYXEQkYHwILHBodH/2gAIAQIBAT8Q+XHQvOETCskjx/MBLikSVitomKHsy6O/41SJJCpQP+oe0Mg8WJgINM1eTgJ4Onb5niqy4ZlI1++MkUY8IQW0KN4QC+kZPgmfOaB5DEJCRO/vXjIHTYNkCR8EU8VRvBY3RqMqtCaL96MMfFYB4UZODTLausmaBlrFFG1lKqTC6ZcWaALLHkiHZuBMfhsTbfZnUoccRFY8iENEAGoJe7fXXzOTavuH+OLMTQ0mhRSiIl/2xRJAkIVN8lq2dX4dpHb8EE2wB+Q1PT97kBghHXJDL9afWEQ5+V60faYh2l027X5Zc8r6cWor6flcNI/nT9wPtcRLa/sPyQ4VFSSIoJxIm+8Fe0CRdJI/tRyY4KyGdCZitNt+51Fv0/TxwZ5WeVk8ty15mv8A3AiAUjIwBSevh0pQOyHUEopY9a7NhmUysqmpe+IqvISylW3TXG9l9sKJ21+ll/e8NRKz0Nv4jUzxicYTeBhtzgZv/j2f29ZCAe5WAK62ZbuLxKJATmn1WKy6AAKCWmDSopcYlkfST1wYZQmownZYmKdgqkzHwgQ12TCGZeyDxDGMs0ArgRMXER6byI5QNpExbe61cd+J1rpy/Qr6dclmDEnGZX0hZ/fEn4b0PNE/TH3YoYRDRHMCXzzc40optUBZQOCffwqC2xBPpxQAAQjabAQekiOMCkkxH0HhUP04XNwYRS4UQwvLzjcTurPyl+oPgUpNGKpzfHVVSq+a/rP/xAAmEAEBAAICAQIGAwEAAAAAAAABEQAhMUFRIGEQcYGRobHB8PEw/9oACAEBAAE/EPVxNQJhalAK7QcuapUwUMYtQawIYGIVALAi6fSrQiHVg5ZV7IKqInS4fjw8XgJrUpj9gGcMMlAUK/7XD2RGjQB+sy9jlkzw6pDCQWLaFAZUp6F7gD4VVEGKBxQM8IAUxF6IaBCz4PGoaim0GR6v+hUl3f8AqSyPx3BWFusDm0LALBroacdsVWyO4liuYRpsS+FFN7a/hF2Wdpm0w8AW1g0iV5kbbJTde1lEgn/SSiMPa4OtUJqpA3EVNkIWy1k0paSZE9xNbrG1au5CwOekCxwwAN3kJCYEoejRNLhlNIFIrgtVUtmF2ckYbgJmdDmkJJWVkV8j6RuBEAWIRyxE98QNgNForKpf+TTUIDuwAIqGp+SraARJiieDsnndos6vFVCuwJqoIGBji2aRZJRS7Qs0JIE12XfQJ4KAqlJ8xkwdB2GNSKHFj4loBUKEcBe0VXUtCYg+SPgLNZvSoxcq1SiUetMFpqlVeUQRYmMrVc0UlLxCgCB4GqZJgareRm43CYjMkLp2AWqJdsKjfX4m+TZWWSz6i/L0gQAlmkKQqgEGSgNidTwyRycaUvQpKMY6HLy9nCQUbY+KquSeG7sCOhDgyGw1CkBgd+AwWMY5Oy0BCNscbuTFNqMIZhIukFAhhAGrBqjYbMsgJ8QKwGKSmFsgFVDF4YyJRDZxCTXjUzXMuxET7cwShEmsBCV0TVxYJOlIJcHEyaDAeg1W3gLo8L5AJFoWBSjggqll5rA4QRLl/RSVEJRUANhbcW8JZBzmwF8FMGUJeinDdrqWrKxL+XSjUNwBdlx0khcSYaHW4rW3AI3ANG1ASFrGWlJy656zXDKQMAHzXABE7bKPH6CZYE5MKpg1oD0sdllBeVbUVKO3DTIt1xEfmZrF6HB/dsPfHE5UATEqI1I4UwAtfqVkgcNJYZEyywLrZJUj2tN8TSjUFIa7nRvzV9aJDDQMd7wwKmswMEIYK8nW2kRkrgEK7EiIaMhpGRIEZwNBeGCZ1moRdKAobAhWhIGwA6Pb9mKshrvSB+z84BkJvE6NCYOllF9PXeFE2PffjuybmaRsCPIc+pjcJ3lLEXyQXVBiiBUrTtdR06A65g6AYOUKqlVEqcHODRUXQOZjcK0qIfBAccawd0K1533+CXnFXUJny9L8k+KYjdFGJVmBtiKgpreBqfFVa/JH9ceOBR7Av3+xjioCiT0gkCMHw/hHianY3+c7oAquZh60G3JI8IpCWAuCuDg/aq5Kum7eEIwWaU+vwjRfVV7SKbHXoBvMDdAaPim106aIeM2uT1DraTmt7xGsR7R/6O80Q1FwRz8ekA/AkQQgE+iqUE17J27/ABbi6Ty7QJqCe8/SIECBAjCI2o0XrvHd36a0m2cR/UJ5bvCBpoPCv7dYSoV4XlKDLgA0HpYpe7NrZEeDHZrBbY0+AC/m/TLRFypG0DU1WFVfSaNGjT1+IXdI21cJ8s/xWf4rP8Vn+KwlssQawEHSZPZD8DANJ6JMKGDQCBKK+g41CKoBslsEAbGiODNVi1eT7cAk9BN8dZtQCiV86Tr9bwWIFDTLpNocz595NCGD2wa2r/Ptky5FK4e7Ou3371TGvaCL1kz+ofxn9Q/jP6h/Gf1D+McDCpTfWeRkeSNj2X9g4DkOJuECV0VabED0P514ouMZallNnKSI0nGtL5AfLIjhNThPJxn7YCQ1jjHg/wAnHgLVqHfC0JRMllRLMsmNhk+Qk40Ikd4GyyzqCQhB30qRwj7RDb6cdtE+Qn5ccbiYCUOjOeucusCkqhVcdzjarGeg0bIQ9dA24kBggN3SRAbhi3vausaYcsaXRejteBeTNx3bMAHB/Y95iwOd0qErVOguDFMm3aU3oobbFQ5LD4UFAs4tbWhWjFFAYvjcNRXa3aglitVV6qe36UsoeRcp6YD2aPWWVIEKQrkAolhuNjE1lQ/N2EiO3Axs1FIWsRW3EWb4DCCoKmmInQTByxY4wEJAF0JLNI2gyPA0HS7IcBX0YyVlEgWW8oewHUCdn0KPyHO4FKFrWaLQmPcE5BchSXAABpXeg/C8ETiZgqF80g+cbr5rkgUEFgBLjtnALNOIWsxAgC204XlZNZt3MCZEq9qeRHv4rIsNwOB4OjwHFAqbG3dBXlDtW8msmvEV0koOUADKxFmLGByIGgUSINSHpxMzjS9lLUtjJHTHpJiNdOTNbEmgwAHQC0y2nw0CZKyivRWCWS9Zyyaqe+X8nhMC9LHCRM1uV4c4o07L2Tk78itoq7AOsHL5g27dJZ1pUESOebw9LwG3EG9V2A5JgArfdmrzUxdC07sBs2TnQQxsFVMsReQkdkdmILUpkBWm3AIInDBhGPkFQInmjHUEoYFdrNtWqyghubm4k4z+gfsaocmgXV5kzCUPTihre1y12RhPOLTzHRy4IMNT5WND6JjQQUu69hCjkk4eE2bAKoqWxY3olYVnGlRhQCKdzgGYmF7PsnkdAG9RkzRJ2WD3ef2yNmngsYVbqYTZgs3rNTHS9OjQgFu8CB5WMX1hVbl1yhG3piBTVLNoG8AyAB4UFFUp0RhBDAeqQ5SgpMEAGtQuHqO7MMGvaZQguXcQN2g0w6U4lQiQTNE0UrLOQLcsSq4OjAlqDkOkpuG4HYW/cylOmOq1RnYG5EASwmIpc2vEgCqEoHKiYK4mk0O0JZA0MDKm28YIAbXPcUsHgjMp9WSFFMTLWoI2LbYwaQRsj+x5iDbmWC6C6PidnnMvQAwmjgRYIkbwenRM2KobmDuxiqgpBpsAgHzk6lkelD62RigqVAcX3YLqKpoIHXcYdVqatAItoiwuf++LAlZhyGK8m0DSCEAR2dUxv3iKdnhkUDoHoCxElsg6oVguYXSMwp6Wlu0x0mP/2Q==';
 
-function esc(s){
-  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-function uid(prefix){ return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
-
-function seedState(){
-  return { artigos: [], requisitos: [] };
-}
-
-function loadLocal(){
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch(e) { console.warn('Falha ao ler dados locais, reiniciando.', e); }
-  return seedState();
-}
-function saveLocal(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-
-let state = { artigos: [], requisitos: [] };
-// `db`: capability de sincronização (só existe quando a página roda publicada com acesso
-// à sua conta Claude). null = modo local, guardando tudo em localStorage neste navegador.
-let db = null;
-// `downloads`: só existe na página publicada; sem ela, um <a download> comum já funciona
-// (modo local, arquivo aberto direto no navegador).
-let downloadsCap = null;
-
-// ---------- Upsert/remove: gravam no `db` (sincronizado) quando disponível, senão em localStorage ----------
-async function upsertArtigo(id, data){
-  const finalId = id || (db ? db.collection('artigos').doc().id : uid('a'));
-  if (db) {
-    await db.collection('artigos').doc(finalId).set(data);
-  } else {
-    const idx = state.artigos.findIndex(a=>a.id===finalId);
-    if (idx>=0) state.artigos[idx] = {id: finalId, ...data};
-    else state.artigos.push({id: finalId, ...data});
-    saveLocal(); renderAll();
+// ---------- Provedores de IA suportados ----------
+// tipo 'gemini': API própria do Google (key vai na query string).
+// tipo 'claude': API própria da Anthropic (key vai no header x-api-key).
+// tipo 'openai-compat': todos os demais, que replicam o formato /chat/completions da OpenAI (Bearer token).
+const PROVEDORES = {
+  gemini: {
+    label: 'Google Gemini', tipo: 'gemini',
+    keyUrl: 'https://aistudio.google.com/app/apikey', keyExemplo: 'AIzaSy... ou AQ...',
+    passos: ['Abra aistudio.google.com/app/apikey e entre com uma conta Google (é grátis, sem cartão).', 'Clique em "Create API key" (ou "Criar chave de API").', 'Copie a chave gerada.', 'Cole no campo abaixo.'],
+    models: [
+      {id:'gemini-3.6-flash', label:'Gemini 3.6 Flash (recomendado, grátis)'},
+      {id:'gemini-3.6-pro', label:'Gemini 3.6 Pro (mais lento, mais rigoroso)'},
+      {id:'gemini-2.5-flash', label:'Gemini 2.5 Flash (contas antigas)'}
+    ]
+  },
+  deepseek: {
+    label: 'DeepSeek', tipo: 'openai-compat', baseUrl: 'https://api.deepseek.com',
+    keyUrl: 'https://platform.deepseek.com/api_keys', keyExemplo: 'sk-...',
+    passos: ['Abra platform.deepseek.com/api_keys e crie uma conta (grátis, ganha créditos iniciais).', 'Clique em "Create new API key".', 'Copie a chave gerada.', 'Cole no campo abaixo.'],
+    models: [{id:'deepseek-chat', label:'DeepSeek Chat (recomendado)'}, {id:'deepseek-reasoner', label:'DeepSeek Reasoner (mais lento, raciocínio)'}]
+  },
+  glm: {
+    label: 'GLM / Zhipu (ChatGLM)', tipo: 'openai-compat', baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
+    keyUrl: 'https://open.bigmodel.cn/usercenter/apikeys', keyExemplo: 'xxxxxxxx.xxxxxxxx',
+    passos: ['Abra open.bigmodel.cn/usercenter/apikeys e crie uma conta.', 'Copie a chave já criada por padrão (ou crie uma nova).', 'Cole no campo abaixo.'],
+    models: [{id:'glm-4-flash', label:'GLM-4 Flash (grátis)'}, {id:'glm-4-plus', label:'GLM-4 Plus'}]
+  },
+  qwen: {
+    label: 'Qwen (Alibaba)', tipo: 'openai-compat', baseUrl: 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1',
+    keyUrl: 'https://bailian.console.alibabacloud.com/?apiKey=1', keyExemplo: 'sk-...',
+    passos: ['Abra bailian.console.alibabacloud.com e crie uma conta Alibaba Cloud (grátis, tem cota de teste).', 'Vá em "API-KEY" e crie uma chave.', 'Cole no campo abaixo.'],
+    models: [{id:'qwen-flash', label:'Qwen Flash (recomendado, barato/gratuito)'}, {id:'qwen-plus', label:'Qwen Plus'}]
+  },
+  kimi: {
+    label: 'Kimi (Moonshot AI)', tipo: 'openai-compat', baseUrl: 'https://api.moonshot.ai/v1',
+    keyUrl: 'https://platform.moonshot.ai/console/api-keys', keyExemplo: 'sk-...',
+    passos: ['Abra platform.moonshot.ai/console/api-keys e crie uma conta (ganha créditos iniciais).', 'Clique em "Create API Key".', 'Cole no campo abaixo.'],
+    models: [{id:'kimi-latest', label:'Kimi Latest (recomendado)'}, {id:'moonshot-v1-8k', label:'Moonshot v1 8k'}]
+  },
+  openai: {
+    label: 'OpenAI', tipo: 'openai-compat', baseUrl: 'https://api.openai.com/v1',
+    keyUrl: 'https://platform.openai.com/api-keys', keyExemplo: 'sk-...',
+    passos: ['Abra platform.openai.com/api-keys e crie uma conta.', 'Clique em "Create new secret key".', 'Cole no campo abaixo.', 'Atenção: a OpenAI hoje quase sempre exige cadastrar um cartão, mesmo para gastar pouco.'],
+    models: [{id:'gpt-4o-mini', label:'GPT-4o mini'}]
+  },
+  claude: {
+    label: 'Claude (Anthropic)', tipo: 'claude',
+    keyUrl: 'https://console.anthropic.com/settings/keys', keyExemplo: 'sk-ant-...',
+    aviso: 'Não tem uso grátis permanente — só um pequeno crédito de teste para contas novas, depois é pago.',
+    passos: ['Abra console.anthropic.com/settings/keys e crie uma conta (ganha um pequeno crédito de teste).', 'Clique em "Create Key".', 'Cole no campo abaixo.'],
+    models: [{id:'claude-3-5-haiku-20241022', label:'Claude 3.5 Haiku'}]
   }
-  return finalId;
-}
-async function removeArtigo(id){
-  if (db) {
-    await db.collection('artigos').doc(id).delete();
-    const linked = state.requisitos.filter(r=>r.artigoId===id);
-    await Promise.all(linked.map(r=> db.collection('requisitos').doc(r.id).set({...r, artigoId:null})));
-  } else {
-    state.artigos = state.artigos.filter(a=>a.id!==id);
-    state.requisitos.forEach(r=>{ if (r.artigoId===id) r.artigoId = null; });
-    saveLocal(); renderAll();
-  }
-}
-async function upsertRequisito(id, data){
-  const finalId = id || (db ? db.collection('requisitos').doc().id : uid('r'));
-  if (db) {
-    await db.collection('requisitos').doc(finalId).set(data);
-  } else {
-    const idx = state.requisitos.findIndex(r=>r.id===finalId);
-    if (idx>=0) state.requisitos[idx] = {id: finalId, ...data};
-    else state.requisitos.push({id: finalId, ...data});
-    saveLocal(); renderAll();
-  }
-  return finalId;
-}
-async function removeRequisito(id){
-  if (db) {
-    await db.collection('requisitos').doc(id).delete();
-  } else {
-    state.requisitos = state.requisitos.filter(r=>r.id!==id);
-    saveLocal(); renderAll();
-  }
-}
-async function wipeAll(){
-  if (db) {
-    const [as, rs] = await Promise.all([db.collection('artigos').get(), db.collection('requisitos').get()]);
-    await Promise.all([
-      ...as.docs.map(d=> db.collection('artigos').doc(d.id).delete()),
-      ...rs.docs.map(d=> db.collection('requisitos').doc(d.id).delete())
-    ]);
-  } else {
-    localStorage.removeItem(STORAGE_KEY);
-    state = seedState();
-    saveLocal(); renderAll();
-  }
-}
+};
 
-// ---------- Toast ----------
-let toastTimer = null;
-function toast(msg){
-  const el = document.getElementById('toast');
-  document.getElementById('toast-message').textContent = msg;
-  el.classList.remove('translate-y-24','opacity-0');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=> el.classList.add('translate-y-24','opacity-0'), 3000);
-}
+// ---------- Definição das seções geradas por IA ----------
+const SECTION_DEFS = [
+  {key:'justificativa', label:'Justificativa', type:'text', hint:'2 a 4 parágrafos justificando a relevância do tema para a BNCC, para o mundo do trabalho e para a formação cidadã, no estilo de um documento oficial de secretaria de educação, com citações (AUTOR, ano) quando fizer sentido.'},
+  {key:'competenciasGerais', label:'Competências Gerais (BNCC)', type:'table', cols:['Código','Texto da competência'], hint:'uma linha por competência geral da BNCC mobilizada (código de 1 a 10 e o texto oficial ou uma paráfrase fiel).'},
+  {key:'competenciaEspecifica', label:'Competência(s) Específica(s) da área', type:'text', hint:'texto da(s) competência(s) específica(s) da área de conhecimento informada, no padrão "Competência específica N de <área>: <texto>".'},
+  {key:'habilidades', label:'Habilidades (BNCC)', type:'table', cols:['Código','Texto da habilidade'], hint:'uma linha por habilidade BNCC mobilizada no bimestre (código, ex. EM13CNT104, e o texto oficial ou uma paráfrase fiel).'},
+  {key:'normasTecnicas', label:'Normas técnicas / legislação de referência', type:'text', hint:'parágrafo curto citando normas técnicas, legislação ou observações "(a verificar)" quando pertinente ao tema; pode ficar vazio se não houver nenhuma relevante.'},
+  {key:'objetivosAprendizagem', label:'Objetivos de Aprendizagem', type:'lines', hint:'de 4 a 8 objetivos de aprendizagem do bimestre, um por linha, começando por verbo no infinitivo (ex.: "Identificar...", "Compreender...", "Aplicar..."), coerentes com o tema e as habilidades BNCC selecionadas.'},
+  {key:'objetosConhecimento', label:'Objeto de Conhecimento (tabela de conteúdos)', type:'table', cols:['Nº','Objeto de conhecimento','Subtópicos','Nº de aulas'], hint:'uma linha por objeto de conhecimento/bloco de aulas; a soma da última coluna deve bater exatamente com o total de aulas informado.'},
+  {key:'distribuicao', label:'Linha de distribuição das aulas', type:'text', hint:'uma frase única, ex.: "Distribuição: 1 aula semanal × N semanas = N aulas. Soma da coluna \\"Nº de aulas\\": ..."'},
+  {key:'atividadesPrevias', label:'Atividades Prévias', type:'lines', hint:'uma atividade prévia/diagnóstica por linha, sem marcadores.'},
+  {key:'atividadesAutodidaticas', label:'Atividades Autodidáticas', type:'lines', hint:'uma atividade autodidática por linha, sem marcadores.'},
+  {key:'interdisciplinares', label:'Atividades interdisciplinares', type:'table', cols:['Componente curricular','Ponto de encontro / atividade comum'], hint:'uma linha por componente curricular parceiro plausível.'},
+  {key:'complementares', label:'Atividades Complementares', type:'lines', hint:'uma atividade de reforço, monitoria, aprofundamento, projeto ou recomposição por linha.'},
+  {key:'aulasDetalhe', label:'Outras Metodologias (plano aula a aula)', type:'table', cols:['Aula nº','Conteúdo da aula','Estratégia metodológica','Recursos','Evidência de aprendizagem'], hint:'exatamente uma linha por aula (total de aulas informado), com estratégias metodológicas que não se repitam entre aulas.'},
+  {key:'totalAulasTexto', label:'Linha de total de aulas', type:'text', hint:'uma frase única, ex.: "Total: N aulas, correspondentes às N semanas do bimestre (1 aula semanal). As estratégias metodológicas não se repetem entre as aulas."'},
+  {key:'materiais', label:'Materiais e equipamentos', type:'lines', hint:'um item por linha.'},
+  {key:'digitais', label:'Recursos digitais', type:'lines', hint:'um item por linha.'},
+  {key:'espacos', label:'Espaços', type:'lines', hint:'um item por linha.'},
+  {key:'av1Estrutura', label:'AV1 — Estrutura da prova', type:'text', hint:'descreva a estrutura da prova escrita (nº de questões objetivas e discursivas e pontuação de cada uma), valor total 10,0.'},
+  {key:'av1Conteudos', label:'AV1 — Conteúdos cobrados', type:'text', hint:'liste os conteúdos cobrados na prova.'},
+  {key:'av1Distribuicao', label:'AV1 — Distribuição da pontuação', type:'text', hint:'explique a distribuição de pontos por conteúdo/questão.'},
+  {key:'av1Aplicacao', label:'AV1 — Condições de aplicação', type:'text', hint:'condições de aplicação (individual, consulta permitida, materiais permitidos etc.).'},
+  {key:'criteriosAV1', label:'Critérios da AV1', type:'table', cols:['Critério','Insuficiente','Satisfatório','Excelente','Peso'], hint:'3 a 4 critérios de avaliação da prova, com pesos (%) somando 100%.'},
+  {key:'av2Instrumentos', label:'AV2 — Instrumentos', type:'text', hint:'liste os instrumentos da avaliação qualitativa (relatório, projeto, participação etc.), valor total 10,0.'},
+  {key:'av2Produto', label:'AV2 — Produto esperado do estudante', type:'text', hint:'descreva o produto esperado (formato, conteúdo, extensão).'},
+  {key:'av2Distribuicao', label:'AV2 — Distribuição da pontuação', type:'text', hint:'distribuição de pontos entre os instrumentos da AV2, somando 10,0.'},
+  {key:'criteriosAV2', label:'Critérios da AV2', type:'table', cols:['Critério','Insuficiente','Satisfatório','Excelente','Peso'], hint:'3 a 4 critérios, com pesos (%) somando 100%.'},
+  {key:'av3Instrumento', label:'AV3 — Instrumento de recomposição', type:'text', hint:'descreva o instrumento de recomposição das aprendizagens, valor total 10,0.'},
+  {key:'av3Aproveitamento', label:'AV3 — Regra de aproveitamento', type:'text', hint:'regra de substituição de nota (mantenha "(a verificar: confirmar no Regimento Escolar)" quando depender de norma interna da escola).'},
+  {key:'criteriosAV3', label:'Critérios da AV3', type:'table', cols:['Critério','Insuficiente','Satisfatório','Excelente','Peso'], hint:'2 critérios, com pesos (%) somando 100%.'},
+  {key:'composicaoNota', label:'Composição da nota do período', type:'text', hint:'fórmula de composição da nota do bimestre (ex.: média entre AV1 e AV2) e regra de substituição pela AV3.'},
+  {key:'refsProfessor', label:'Fontes e Referências — Para o professor', type:'lines', hint:'uma referência bibliográfica por linha, em formato ABNT.'},
+  {key:'refsEstudante', label:'Fontes e Referências — Para o estudante', type:'lines', hint:'uma referência bibliográfica por linha, em formato ABNT (pode repetir itens da lista do professor).'}
+];
 
-// ---------- Navegação ----------
-const SECTIONS = ['dashboard','biblioteca','matriz','sintese'];
-function showSection(name){
-  if (!SECTIONS.includes(name)) name = 'dashboard';
-  SECTIONS.forEach(s => document.getElementById('section-'+s).hidden = (s !== name));
-  document.querySelectorAll('.nav-btn').forEach(b=>{
-    const active = b.dataset.path === name;
-    b.classList.toggle('bg-primary-container', active);
-    b.classList.toggle('text-on-primary-container', active);
-    b.classList.toggle('font-semibold', active);
-    b.classList.toggle('text-on-surface-variant', !active);
-  });
-  document.getElementById('sidebar').classList.remove('open');
-  location.hash = name;
-}
-document.getElementById('nav').addEventListener('click', e=>{
-  const btn = e.target.closest('.nav-btn');
-  if (btn) showSection(btn.dataset.path);
-});
-window.addEventListener('hashchange', ()=> showSection(location.hash.slice(1)));
-document.getElementById('btn-toggle-sidebar').addEventListener('click', ()=> document.getElementById('sidebar').classList.toggle('open'));
-
-// ---------- Modais ----------
-function openModal(id){ const m=document.getElementById(id); m.classList.remove('hidden'); m.classList.add('flex'); }
-function closeModal(id){ const m=document.getElementById(id); m.classList.add('hidden'); m.classList.remove('flex'); }
-document.querySelectorAll('.modal-close').forEach(b=> b.addEventListener('click', ()=> closeModal(b.dataset.modal)));
-[['modal-artigo'],['modal-requisito']].forEach(([id])=>{
-  document.getElementById(id).addEventListener('click', e=>{ if (e.target.id === id) closeModal(id); });
+const KEY = 'guia-aprendizagem-state';
+const PADRAO = () => ({
+  config: {provider:'gemini', apiKey:'', model:PROVEDORES.gemini.models[0].id},
+  input: {pleno:'', curso:'', professor:'', componente:'', periodo:'', serie:'', area:'Ciências da Natureza e suas Tecnologias', tema:'', numAulas:8, aulasPorSemana:1, competenciasGeraisNums:'', bibliografiaBase:'', contexto:''},
+  sections: Object.fromEntries(SECTION_DEFS.map(s => [s.key, '']))
 });
 
-// ---------- BibTeX parsing (lazy: cobre os campos comuns) ----------
-function parseBibtex(text){
-  const get = (key) => {
-    const m = text.match(new RegExp(key + "\\s*=\\s*[{\"]([^}\"]*)[}\"]", 'i'));
-    return m ? m[1].trim() : '';
-  };
-  const keyMatch = text.match(/@\w+\{([^,]+),/);
-  return {
-    bibtexKey: keyMatch ? keyMatch[1].trim() : '',
-    titulo: get('title'),
-    autoresText: get('author'),
-    ano: get('year'),
-    venue: get('journal') || get('booktitle') || get('publisher'),
-    doi: get('doi')
-  };
+let S;
+try { S = {...PADRAO(), ...JSON.parse(localStorage.getItem(KEY) || 'null')}; } catch { S = PADRAO(); }
+if (!S) S = PADRAO();
+S.config = {...PADRAO().config, ...(S.config||{})};
+S.input = {...PADRAO().input, ...(S.input||{})};
+S.sections = {...PADRAO().sections, ...(S.sections||{})};
+
+// ---------- Helpers de texto ----------
+const esc = s => (s ?? '').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const linhas = t => (t||'').split('\n').map(x=>x.trim()).filter(Boolean);
+const linhasTabela = t => linhas(t).map(l => l.split('|').map(c=>c.trim()));
+const listaHTML = t => { const L = linhas(t); return L.length ? `<ul>${L.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>` : '<p class="vazio">—</p>'; };
+const paragrafosHTML = t => { const P = (t||'').split(/\n\s*\n/).map(p=>p.trim()).filter(Boolean); return P.length ? P.map(p=>`<p>${esc(p).replace(/\n/g,'<br>')}</p>`).join('') : '<p class="vazio">—</p>'; };
+
+// ---------- Montagem do documento (iframe de prévia/impressão) ----------
+const BASE_CSS = `
+@page{size:A4;margin:12mm 11mm}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact;color-adjust:exact}
+body{font-family:Arial,Helvetica,sans-serif;font-size:10.3pt;color:#111;margin:0;padding:10px}
+.outer{border:1.4px solid #000}
+table{width:100%;border-collapse:collapse}
+td,th{border:1px solid #000;padding:4px 6px;vertical-align:top;text-align:left;font-size:10pt}
+th{font-weight:600}
+.header-tbl td{border:none;padding:4px 8px;vertical-align:middle}
+.header-tbl img{display:block;height:58px;margin:0 auto}
+.brand{font-weight:bold;font-size:9.3pt;text-align:center;line-height:1.35}
+.title-bar{background:#dbe9f4;font-weight:bold;font-size:15pt;text-align:center;padding:8px;border-top:1.4px solid #000;border-bottom:1.4px solid #000}
+.section-bar{background:#dbe9f4;font-weight:bold;text-align:center;padding:4px;border:1px solid #000;font-size:10.5pt}
+.subhead{font-weight:bold;background:#eef3f8;padding:3px 6px;border:1px solid #000;font-size:10pt}
+ul{margin:3px 0 3px 16px;padding:0}
+li{margin-bottom:2px}
+p{margin:4px 0}
+p.vazio{color:#888;font-style:italic}
+.pad{padding:6px 8px}
+.center{text-align:center}
+.small{font-size:8.8pt;color:#333}
+.section-wrap{margin-top:-1px}
+`;
+
+function tabelaObjetos(S){
+  const R = linhasTabela(S.sections.objetosConhecimento);
+  let total = 0;
+  const corpo = R.map(r => {
+    const [n,obj,sub,aulas] = r;
+    total += parseInt(aulas)||0;
+    return `<tr><td class="center" style="width:4%">${esc(n)}</td><td style="width:18%">${esc(obj)}</td><td>${esc(sub)}</td><td class="center" style="width:9%">${esc(aulas)}</td></tr>`;
+  }).join('');
+  return `<table><thead><tr><th class="center">Nº</th><th>Objeto de conhecimento</th><th>Subtópicos</th><th class="center">Nº de aulas</th></tr></thead>
+  <tbody>${corpo || '<tr><td colspan="4" class="vazio center">—</td></tr>'}
+  <tr><td colspan="3" style="text-align:right;font-weight:bold">TOTAL DE AULAS DO PERÍODO</td><td class="center" style="font-weight:bold">${total}</td></tr></tbody></table>
+  <p class="small pad">${esc(S.sections.distribuicao)}</p>`;
 }
 
-// ---------- Artigo: modal, salvar, excluir ----------
-let editingArtigoId = null;
-// O progresso (%) mostrado na Biblioteca/Dashboard vem sempre do status — não é editado à parte,
-// para não ficar dessincronizado (era a causa de "marquei Fichado mas continua contando como pendente").
-function progressoFromStatus(status){
-  return status === 'Fichado' ? 100 : status === 'Em Leitura' ? 50 : 0;
-}
-function fillArtigoForm(a){
-  document.getElementById('ma-titulo').value = a?.titulo || '';
-  document.getElementById('ma-autores').value = a?.autoresText || '';
-  document.getElementById('ma-ano').value = a?.ano || '';
-  document.getElementById('ma-venue').value = a?.venue || '';
-  document.getElementById('ma-doi').value = a?.doi || '';
-  document.getElementById('ma-qualis').value = a?.qualis || 'A1';
-  document.getElementById('ma-relevancia').value = a?.relevancia || 'Essencial';
-  document.getElementById('ma-status').value = a?.status || 'Não Lido';
-  document.getElementById('ma-tags').value = (a?.tags || []).join(', ');
-  document.getElementById('ma-sintese').value = a?.sintese || '';
-  document.getElementById('ma-aplicacao').value = a?.aplicacaoProduto || '';
-  document.getElementById('ma-metodologia').value = a?.metodologia || '';
-  document.getElementById('ma-citacoes').value = (a?.citacoes || []).map(c=>`${c.pagina} :: ${c.trecho}`).join('\n');
-  document.getElementById('ma-bibtex-paste').value = '';
-}
-function openArtigoModal(id){
-  editingArtigoId = id || null;
-  const artigo = id ? state.artigos.find(a=>a.id===id) : null;
-  document.getElementById('ma-title').textContent = id ? 'Editar Artigo / Fichamento' : 'Novo Artigo';
-  fillArtigoForm(artigo);
-  openModal('modal-artigo');
-}
-document.getElementById('btn-new-artigo').addEventListener('click', ()=> openArtigoModal(null));
-document.getElementById('btn-new-artigo-2').addEventListener('click', ()=> openArtigoModal(null));
-document.getElementById('ma-parse-btn').addEventListener('click', ()=>{
-  const text = document.getElementById('ma-bibtex-paste').value.trim();
-  if (!text) return;
-  const parsed = parseBibtex(text);
-  if (parsed.titulo) document.getElementById('ma-titulo').value = parsed.titulo;
-  if (parsed.autoresText) document.getElementById('ma-autores').value = parsed.autoresText;
-  if (parsed.ano) document.getElementById('ma-ano').value = parsed.ano;
-  if (parsed.venue) document.getElementById('ma-venue').value = parsed.venue;
-  if (parsed.doi) document.getElementById('ma-doi').value = parsed.doi;
-  toast('Campos preenchidos a partir do BibTeX.');
-});
-document.getElementById('btn-import-bibtex').addEventListener('click', ()=> openArtigoModal(null));
-document.getElementById('ma-save-btn').addEventListener('click', async ()=>{
-  const titulo = document.getElementById('ma-titulo').value.trim();
-  if (!titulo){ toast('Informe ao menos o título do artigo.'); return; }
-  const citacoes = document.getElementById('ma-citacoes').value.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
-    const [pagina, ...rest] = l.split('::');
-    return rest.length ? {pagina: pagina.trim(), trecho: rest.join('::').trim()} : {pagina:'', trecho: l};
-  });
-  const status = document.getElementById('ma-status').value;
-  const prev = editingArtigoId ? state.artigos.find(a=>a.id===editingArtigoId) : null;
-  const data = {
-    titulo,
-    autoresText: document.getElementById('ma-autores').value.trim(),
-    ano: Number(document.getElementById('ma-ano').value) || '',
-    venue: document.getElementById('ma-venue').value.trim(),
-    doi: document.getElementById('ma-doi').value.trim(),
-    qualis: document.getElementById('ma-qualis').value,
-    relevancia: document.getElementById('ma-relevancia').value,
-    status,
-    progresso: progressoFromStatus(status),
-    tags: document.getElementById('ma-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
-    sintese: document.getElementById('ma-sintese').value.trim(),
-    aplicacaoProduto: document.getElementById('ma-aplicacao').value.trim(),
-    metodologia: document.getElementById('ma-metodologia').value.trim(),
-    citacoes,
-    citacoesExtraidas: citacoes.length || prev?.citacoesExtraidas || 0,
-    avaliacao: prev?.avaliacao || 0,
-    bibtexKey: prev?.bibtexKey || uid('key'),
-    createdAt: prev?.createdAt || Date.now()
-  };
-  try {
-    const savedId = await upsertArtigo(editingArtigoId, data);
-    // Limpa os filtros da Biblioteca e mostra o artigo salvo, para garantir que ele apareça
-    // mesmo se havia uma busca/filtro antigo escondendo a lista (era a causa do "não deu certo").
-    bibFiltro.q = ''; bibFiltro.status = 'all'; bibFiltro.qualis = 'all'; bibFiltro.tag = null;
-    const bibSearchEl = document.getElementById('bib-search');
-    if (bibSearchEl) bibSearchEl.value = '';
-    const bibStatusEl = document.getElementById('bib-status');
-    if (bibStatusEl) bibStatusEl.value = 'all';
-    selectedArtigoId = savedId;
-    closeModal('modal-artigo');
-    showSection('biblioteca');
-    toast('Artigo salvo com sucesso.');
-  } catch (err) {
-    console.error(err);
-    toast('Não foi possível salvar agora. Verifique a conexão e tente novamente.');
-  }
-});
-async function deleteArtigo(id){
-  if (!confirm('Excluir este artigo e seu fichamento?')) return;
-  try {
-    await removeArtigo(id);
-    if (selectedArtigoId === id) selectedArtigoId = null;
-    toast('Artigo excluído.');
-  } catch (err) {
-    console.error(err);
-    toast('Não foi possível excluir agora. Verifique a conexão e tente novamente.');
-  }
+function tabelaAulas(S){
+  const R = linhasTabela(S.sections.aulasDetalhe);
+  const corpo = R.map(r => {
+    const [n,cont,estr,rec,ev] = r;
+    return `<tr><td class="center" style="width:4%">${esc(n)}</td><td style="width:20%">${esc(cont)}</td><td style="width:20%">${esc(estr)}</td><td style="width:20%">${esc(rec)}</td><td>${esc(ev)}</td></tr>`;
+  }).join('');
+  return `<table><thead><tr><th class="center">Aula nº</th><th>Conteúdo da aula</th><th>Estratégia metodológica</th><th>Recursos</th><th>Evidência de aprendizagem</th></tr></thead>
+  <tbody>${corpo || '<tr><td colspan="5" class="vazio center">—</td></tr>'}</tbody></table>
+  <p class="small pad">${esc(S.sections.totalAulasTexto)}</p>`;
 }
 
-// ---------- Requisito: modal, salvar, excluir ----------
-let editingRequisitoId = null;
-function refreshArtigoSelect(){
-  const sel = document.getElementById('mr-artigo');
-  const current = sel.value;
-  sel.innerHTML = '<option value="">— Sem evidência vinculada —</option>' +
-    state.artigos.map(a=>`<option value="${esc(a.id)}">${esc(a.autoresText)} (${esc(a.ano)}) — ${esc(a.titulo.slice(0,50))}</option>`).join('');
-  sel.value = current;
-}
-function openRequisitoModal(id){
-  editingRequisitoId = id || null;
-  const r = id ? state.requisitos.find(x=>x.id===id) : null;
-  document.getElementById('mr-title').textContent = id ? 'Editar Vinculação' : 'Vincular Artigo ao Requisito';
-  refreshArtigoSelect();
-  document.getElementById('mr-modulo').value = r?.modulo || 'm1';
-  document.getElementById('mr-codigo').value = r?.codigo || '';
-  document.getElementById('mr-tipo').value = r?.tipo || 'RF';
-  document.getElementById('mr-titulo-req').value = r?.titulo || '';
-  document.getElementById('mr-descricao').value = r?.descricao || '';
-  document.getElementById('mr-status').value = r?.status || 'Modelado no Backlog';
-  document.getElementById('mr-artigo').value = r?.artigoId || '';
-  document.getElementById('mr-justificativa').value = r?.justificativa || '';
-  document.getElementById('mr-capitulo').value = r?.capitulo || '';
-  openModal('modal-requisito');
-}
-document.getElementById('btn-add-vinculo').addEventListener('click', ()=> openRequisitoModal(null));
-document.getElementById('mr-save-btn').addEventListener('click', async ()=>{
-  const codigo = document.getElementById('mr-codigo').value.trim();
-  const titulo = document.getElementById('mr-titulo-req').value.trim();
-  if (!codigo || !titulo){ toast('Informe código e título do requisito.'); return; }
-  const data = {
-    modulo: document.getElementById('mr-modulo').value,
-    codigo, tipo: document.getElementById('mr-tipo').value, titulo,
-    descricao: document.getElementById('mr-descricao').value.trim(),
-    status: document.getElementById('mr-status').value,
-    artigoId: document.getElementById('mr-artigo').value || null,
-    justificativa: document.getElementById('mr-justificativa').value.trim(),
-    capitulo: document.getElementById('mr-capitulo').value.trim()
-  };
-  try {
-    await upsertRequisito(editingRequisitoId, data);
-    // Limpa os filtros da Matriz para garantir que o requisito salvo apareça na lista.
-    mtzFiltro.q = ''; mtzFiltro.modulo = 'all'; mtzFiltro.tipo = 'all'; mtzFiltro.statuses = new Set(STATUSES);
-    const mtzSearchEl = document.getElementById('mtz-search');
-    if (mtzSearchEl) mtzSearchEl.value = '';
-    closeModal('modal-requisito');
-    showSection('matriz');
-    toast(`Requisito ${esc(codigo)} salvo.`);
-  } catch (err) {
-    console.error(err);
-    toast('Não foi possível salvar agora. Verifique a conexão e tente novamente.');
-  }
-});
-async function deleteRequisito(id){
-  if (!confirm('Excluir esta vinculação?')) return;
-  try {
-    await removeRequisito(id);
-    toast('Vinculação excluída.');
-  } catch (err) {
-    console.error(err);
-    toast('Não foi possível excluir agora. Verifique a conexão e tente novamente.');
-  }
+function tabelaCriterios(texto){
+  const R = linhasTabela(texto);
+  const corpo = R.map(r => {
+    const [crit,ins,sat,exc,peso] = r;
+    return `<tr><td style="width:16%;font-weight:600">${esc(crit)}</td><td style="width:22%">${esc(ins)}</td><td style="width:22%">${esc(sat)}</td><td style="width:22%">${esc(exc)}</td><td class="center" style="width:8%">${esc(peso)}</td></tr>`;
+  }).join('');
+  return `<table><thead><tr><th>Critério</th><th>Insuficiente</th><th>Satisfatório</th><th>Excelente</th><th class="center">Peso</th></tr></thead>
+  <tbody>${corpo || '<tr><td colspan="5" class="vazio center">—</td></tr>'}</tbody></table>`;
 }
 
-// ---------- Dashboard ----------
-function renderDashboard(){
-  const artigos = state.artigos;
-  const total = artigos.length;
-  const completos = artigos.filter(a=>a.progresso>=100).length;
-  const emLeitura = artigos.filter(a=>a.progresso>0 && a.progresso<100).length;
-  const pendentes = artigos.filter(a=>!a.progresso).length;
-  const citacoes = artigos.reduce((s,a)=>s+(a.citacoesExtraidas||0),0);
-  const cards = [
-    ['auto_stories','Total Mapeado', total, 'artigos'],
-    ['task_alt','Fichados Completo', completos, total?Math.round(completos/total*100)+'% da meta':''],
-    ['menu_book','Em Leitura Ativa', emLeitura, 'em progresso'],
-    ['pending_actions','Pendentes', pendentes, 'não lidos'],
-    ['format_quote','Citações Extraídas', citacoes, 'trechos']
-  ];
-  document.getElementById('kpi-grid').innerHTML = cards.map(([icon,label,value,sub])=>`
-    <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between">
-      <div class="flex items-center justify-between text-on-surface-variant mb-space-xs">
-        <span class="font-caption text-caption uppercase tracking-wider font-semibold">${esc(label)}</span>
-        <span class="material-symbols-outlined text-secondary text-xl">${esc(icon)}</span>
-      </div>
-      <div class="flex items-baseline gap-space-xs">
-        <span class="font-headline-lg text-headline-lg font-bold text-primary">${esc(value)}</span>
-        <span class="font-caption text-caption text-on-surface-variant font-medium">${esc(sub)}</span>
-      </div>
+function listaCodigoTexto(texto, comParenteses){
+  const R = linhasTabela(texto);
+  if (!R.length) return '<p class="vazio">—</p>';
+  return R.map(r => {
+    const [cod,txt] = r;
+    const rotulo = comParenteses ? `(${esc(cod)})` : `${esc(cod)}.`;
+    return `<p><strong>${rotulo}</strong> ${esc(txt)}</p>`;
+  }).join('');
+}
+
+function blocoInterdisciplinar(texto){
+  const R = linhasTabela(texto);
+  if (!R.length) return '<p class="vazio">—</p>';
+  return R.map(r => `<p><strong>${esc(r[0])}</strong> — ${esc(r[1])}</p>`).join('');
+}
+
+function montar(S){
+  const I = S.input, Sec = S.sections;
+  const totalAulasObj = linhasTabela(Sec.objetosConhecimento).reduce((a,r)=>a+(parseInt(r[3])||0),0);
+
+  const corpo = `
+  <div class="outer">
+    <table class="header-tbl"><tr>
+      <td style="width:18%"><img src="${LOGO_IEMA}" alt="Logo IEMA"></td>
+      <td class="brand">GOVERNO DO ESTADO DO MARANHÃO<br>SECRETARIA DE ESTADO DA EDUCAÇÃO<br>INSTITUTO ESTADUAL DE EDUCAÇÃO, CIÊNCIA E TECNOLOGIA DO MARANHÃO – IEMA<br>DIRETORIA ADJUNTA PEDAGÓGICA</td>
+      <td style="width:18%"><img src="${BRASAO_MA}" alt="Brasão do Maranhão"></td>
+    </tr></table>
+    <div class="title-bar">GUIA DE APRENDIZAGEM</div>
+    <table>
+      <tr><td style="width:16%;font-weight:600">IEMA Pleno:</td><td colspan="3">${esc(I.pleno)}</td></tr>
+      <tr><td style="font-weight:600">Curso:</td><td colspan="3">${esc(I.curso)}</td></tr>
+      <tr><th class="center">Professor</th><th class="center">Componente Curricular</th><th class="center">Período</th><th class="center">Série</th></tr>
+      <tr><td>${esc(I.professor)}</td><td class="center">${esc(I.componente)}</td><td class="center">${esc(I.periodo)}</td><td class="center">${esc(I.serie)}</td></tr>
+    </table>
+
+    <div class="section-bar">Justificativa</div>
+    <div class="pad">${paragrafosHTML(Sec.justificativa)}</div>
+
+    <div class="section-bar">Competências e Habilidades</div>
+    <div class="pad">
+      <p class="small"><strong>Competências Gerais da Educação Básica – BNCC</strong></p>
+      ${listaCodigoTexto(Sec.competenciasGerais, false)}
+      <p class="small" style="margin-top:8px"><strong>Competência Específica</strong></p>
+      ${paragrafosHTML(Sec.competenciaEspecifica)}
+      <p class="small" style="margin-top:8px"><strong>Habilidades</strong></p>
+      ${listaCodigoTexto(Sec.habilidades, true)}
+      ${Sec.normasTecnicas.trim() ? `<p class="small" style="margin-top:8px"><strong>Normas técnicas de referência</strong></p>${paragrafosHTML(Sec.normasTecnicas)}` : ''}
+    </div>
+
+    <div class="section-bar">Objetivos de Aprendizagem</div>
+    <div class="pad">${listaHTML(Sec.objetivosAprendizagem)}</div>
+
+    <div class="section-bar">Objeto de Conhecimento (Conteúdo)</div>
+    ${tabelaObjetos(S)}
+
+    <div class="section-bar">Metodologia</div>
+    <table><tr><th class="center" style="width:50%">Atividades Prévias</th><th class="center">Atividades Autodidáticas</th></tr>
+      <tr><td>${listaHTML(Sec.atividadesPrevias)}</td><td>${listaHTML(Sec.atividadesAutodidaticas)}</td></tr></table>
+    <table><tr><th class="center" style="width:50%">Atividades Didáticas interdisciplinares</th><th class="center">Atividades Complementares</th></tr>
+      <tr><td>${blocoInterdisciplinar(Sec.interdisciplinares)}</td><td>${listaHTML(Sec.complementares)}</td></tr></table>
+    <div class="subhead">Outras Metodologias</div>
+    ${tabelaAulas(S)}
+
+    <div class="section-bar">Recursos</div>
+    <div class="pad">
+      <p><strong>Materiais e equipamentos</strong></p>${listaHTML(Sec.materiais)}
+      <p><strong>Recursos digitais</strong></p>${listaHTML(Sec.digitais)}
+      <p><strong>Espaços</strong></p>${listaHTML(Sec.espacos)}
+    </div>
+
+    <div class="section-bar">Instrumentos Avaliativos/Critérios</div>
+    <table><tr><th class="center" style="width:50%">AV1 – Prova escrita (valor: 10,0 pontos)</th><th class="center">AV2 – Avaliação qualitativa (valor: 10,0 pontos)</th></tr>
+      <tr><td>
+        <p><strong>Estrutura</strong></p>${paragrafosHTML(Sec.av1Estrutura)}
+        <p><strong>Conteúdos cobrados</strong></p>${paragrafosHTML(Sec.av1Conteudos)}
+        <p><strong>Distribuição da pontuação</strong></p>${paragrafosHTML(Sec.av1Distribuicao)}
+        <p><strong>Aplicação</strong></p>${paragrafosHTML(Sec.av1Aplicacao)}
+      </td><td>
+        <p><strong>Instrumentos</strong></p>${paragrafosHTML(Sec.av2Instrumentos)}
+        <p><strong>Produto esperado do estudante</strong></p>${paragrafosHTML(Sec.av2Produto)}
+        <p><strong>Distribuição da pontuação</strong></p>${paragrafosHTML(Sec.av2Distribuicao)}
+      </td></tr></table>
+    <div class="subhead">AV3 – Recomposição das aprendizagens (valor: 10,0 pontos)</div>
+    <div class="pad">
+      <p><strong>Instrumento</strong></p>${paragrafosHTML(Sec.av3Instrumento)}
+      <p><strong>Aproveitamento</strong></p>${paragrafosHTML(Sec.av3Aproveitamento)}
+    </div>
+    <div class="subhead">Critérios da AV1 – Prova escrita</div>
+    ${tabelaCriterios(Sec.criteriosAV1)}
+    <div class="subhead">Critérios da AV2 – Avaliação qualitativa</div>
+    ${tabelaCriterios(Sec.criteriosAV2)}
+    <div class="subhead">Critérios da AV3 – Recomposição das aprendizagens</div>
+    ${tabelaCriterios(Sec.criteriosAV3)}
+    <div class="subhead">Composição da nota do período</div>
+    <div class="pad">${paragrafosHTML(Sec.composicaoNota)}</div>
+
+    <div class="section-bar">Fontes e Referências</div>
+    <div class="pad">
+      <p><strong>Para o professor:</strong></p>${listaHTML(Sec.refsProfessor)}
+      <p style="margin-top:8px"><strong>Para o estudante:</strong></p>${listaHTML(Sec.refsEstudante)}
+    </div>
+  </div>`;
+
+  const titulo = [I.componente, I.serie, I.periodo].filter(Boolean).join(' - ') || 'guia-de-aprendizagem';
+  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>${esc(titulo)}</title><style>${BASE_CSS}</style></head><body>${corpo}</body></html>`;
+}
+
+// ---------- Prévia / autosave ----------
+const $ = s => document.querySelector(s);
+const prev = $('#prev');
+let tPrev;
+function atualizar(){
+  clearTimeout(tPrev);
+  tPrev = setTimeout(() => {
+    try { localStorage.setItem(KEY, JSON.stringify(S)); }
+    catch { $('#status').textContent = 'Rascunho não salvo automaticamente (armazenamento cheio) — use "Salvar guia (.json)".'; }
+    const y = prev.contentWindow?.scrollY || 0;
+    prev.onload = () => prev.contentWindow.scrollTo(0, y);
+    prev.srcdoc = montar(S);
+  }, 250);
+}
+
+// ---------- Formulário ----------
+function montarSelectProvedor(){
+  $('#aiProvider').innerHTML = Object.entries(PROVEDORES).map(([id,p]) => `<option value="${id}">${esc(p.label)}</option>`).join('');
+}
+function montarSelectModelo(){
+  const p = PROVEDORES[S.config.provider] || PROVEDORES.gemini;
+  $('#aiModel').innerHTML = p.models.map(m => `<option value="${esc(m.id)}">${esc(m.label)}</option>`).join('');
+}
+function montarTutorial(){
+  const p = PROVEDORES[S.config.provider] || PROVEDORES.gemini;
+  $('#tutorialPassos').innerHTML = p.passos.map(l => `<li>${esc(l)}</li>`).join('');
+  $('#apiKey').placeholder = `Cole sua chave aqui (${p.keyExemplo})`;
+  const av = $('#provedorAviso');
+  if (p.aviso) { av.textContent = '⚠️ ' + p.aviso; av.style.display = ''; } else { av.style.display = 'none'; }
+}
+function preencherForm(){
+  document.querySelectorAll('[data-k]').forEach(el => { el.value = S.input[el.dataset.k] ?? ''; });
+  $('#aiProvider').value = S.config.provider;
+  $('#apiKey').value = S.config.apiKey ?? '';
+  montarSelectModelo();
+  $('#aiModel').value = S.config.model ?? '';
+  document.querySelectorAll('[data-sec]').forEach(el => { el.value = S.sections[el.dataset.sec] ?? ''; });
+  montarTutorial();
+  $('#semChaveMsg').style.display = S.config.apiKey ? 'none' : '';
+}
+
+// ---------- Tutorial e compartilhamento de chave ----------
+$('#mostrarTutorial').addEventListener('click', () => { $('#tutorialChave').style.display = ''; $('#apiKey').focus(); });
+$('#mostrarImportar').addEventListener('click', () => {
+  document.querySelectorAll('#cfgbox details')[0].open = true;
+  $('#codigoImportar').focus();
+});
+$('#gerarCodigo').addEventListener('click', () => {
+  if (!S.config.apiKey) { alert('Cole sua chave de API no campo acima antes de gerar o código.'); return; }
+  const codigo = btoa(unescape(encodeURIComponent(JSON.stringify(S.config))));
+  $('#codigoCompartilhar').value = codigo;
+  navigator.clipboard?.writeText(codigo).catch(() => {});
+  $('#status').textContent = 'Código gerado e copiado — cole no WhatsApp/e-mail para seus colegas.';
+});
+$('#aplicarCodigo').addEventListener('click', () => {
+  const bruto = $('#codigoImportar').value.trim();
+  if (!bruto) return;
+  try {
+    const cfg = JSON.parse(decodeURIComponent(escape(atob(bruto))));
+    if (!cfg.apiKey || !PROVEDORES[cfg.provider]) throw new Error('código inválido');
+    S.config = {...S.config, ...cfg};
+    preencherForm(); atualizar();
+    $('#status').textContent = 'Configuração aplicada — já pode gerar o guia com IA.';
+  } catch { alert('Código inválido. Peça para seu colega gerar um novo código em "Compartilhar esta chave com colegas".'); }
+});
+document.querySelectorAll('[data-k]').forEach(el => el.addEventListener('input', () => {
+  S.input[el.dataset.k] = el.type === 'number' ? (+el.value || 0) : el.value;
+  atualizar();
+}));
+$('#aiProvider').addEventListener('input', () => {
+  S.config.provider = $('#aiProvider').value;
+  S.config.apiKey = '';
+  S.config.model = (PROVEDORES[S.config.provider] || PROVEDORES.gemini).models[0].id;
+  $('#statusChave').textContent = '';
+  preencherForm(); atualizar();
+});
+$('#apiKey').addEventListener('input', () => { S.config.apiKey = $('#apiKey').value; atualizar(); });
+$('#aiModel').addEventListener('input', () => { S.config.model = $('#aiModel').value; atualizar(); });
+
+function montarEditorSecoes(){
+  const box = $('#editorSecoes');
+  box.innerHTML = SECTION_DEFS.map(s => `
+    <div class="seccard">
+      <label for="sec-${s.key}">${esc(s.label)}</label>
+      <textarea id="sec-${s.key}" data-sec="${s.key}"></textarea>
+      <p class="hint">${esc(s.hint)}</p>
     </div>`).join('');
-
-  const byQualis = {};
-  artigos.forEach(a=>{ byQualis[a.qualis] = (byQualis[a.qualis]||0)+1; });
-  const maxCount = Math.max(1, ...Object.values(byQualis));
-  document.getElementById('qualis-list').innerHTML = Object.entries(byQualis).sort((a,b)=>b[1]-a[1]).map(([q,c])=>`
-    <div>
-      <div class="flex justify-between items-center text-body-sm font-body-sm mb-1">
-        <span class="text-on-surface font-medium">Qualis ${esc(q)}</span>
-        <span class="font-label-code text-label-code text-primary font-bold">${c}</span>
-      </div>
-      <div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden">
-        <div class="bg-secondary-container h-full rounded-full" style="width:${Math.round(c/maxCount*100)}%"></div>
-      </div>
-    </div>`).join('') || '<p class="font-body-sm text-on-surface-variant">Nenhum artigo cadastrado ainda.</p>';
-
-  const recent = [...artigos].sort((a,b)=>b.createdAt-a.createdAt).slice(0,5);
-  document.getElementById('recent-table-body').innerHTML = recent.map(a=>`
-    <tr class="hover:bg-surface-container-low/40">
-      <td class="py-space-sm px-space-md max-w-sm truncate">${esc(a.titulo)}</td>
-      <td class="py-space-sm px-space-sm">${esc(a.ano)}</td>
-      <td class="py-space-sm px-space-sm">${esc(a.qualis)}</td>
-      <td class="py-space-sm px-space-sm">${esc(a.status)}</td>
-      <td class="py-space-sm px-space-md text-right">
-        <button class="btn-ver-artigo font-label-tag text-caption text-secondary hover:underline" data-id="${esc(a.id)}" title="Abrir este artigo na Biblioteca para ver ou editar o fichamento completo">Abrir</button>
-      </td>
-    </tr>`).join('') || '<tr><td class="py-space-md px-space-md text-on-surface-variant" colspan="5">Nenhum artigo ainda — clique em "Novo Artigo".</td></tr>';
-  document.querySelectorAll('.btn-ver-artigo').forEach(b=> b.addEventListener('click', ()=>{
-    selectedArtigoId = b.dataset.id;
-    showSection('biblioteca');
-    renderBiblioteca();
+  box.querySelectorAll('[data-sec]').forEach(el => el.addEventListener('input', () => {
+    S.sections[el.dataset.sec] = el.value;
+    atualizar();
   }));
 }
 
-document.getElementById('btn-export-resumo').addEventListener('click', ()=>{
-  const artigos = state.artigos;
-  const lines = [`Resumo de leitura — ${artigos.length} artigos mapeados, ${artigos.filter(a=>a.progresso>=100).length} fichados.`, ''];
-  artigos.forEach(a=> lines.push(`- ${a.autoresText} (${a.ano}). ${a.titulo}. Qualis ${a.qualis}. Status: ${a.status}.`));
-  navigator.clipboard.writeText(lines.join('\n')).then(()=> toast('Resumo copiado para a área de transferência.'));
-});
+// ---------- Chamadas de IA ----------
+function especificacaoSecoes(){
+  return SECTION_DEFS.map(s => {
+    const formato = s.type === 'table'
+      ? `tabela: uma linha por registro, colunas separadas por " | " nesta ordem: ${s.cols.join(' | ')} (sem linha de cabeçalho)`
+      : s.type === 'lines'
+        ? 'lista: um item por linha, sem marcadores nem numeração'
+        : 'texto corrido, parágrafos separados por uma linha em branco';
+    return `### ${s.key}\n(${formato}) ${s.hint}`;
+  }).join('\n\n');
+}
 
-// ---------- Biblioteca ----------
-let selectedArtigoId = null;
-const bibFiltro = {q:'', status:'all', qualis:'all', tag:null};
-function filteredArtigos(){
-  return state.artigos.filter(a=>{
-    if (bibFiltro.status!=='all' && a.status!==bibFiltro.status) return false;
-    if (bibFiltro.qualis!=='all' && a.qualis!==bibFiltro.qualis) return false;
-    if (bibFiltro.tag && !(a.tags||[]).includes(bibFiltro.tag)) return false;
-    if (bibFiltro.q){
-      const hay = [a.titulo,a.autoresText,a.sintese,(a.tags||[]).join(' ')].join(' ').toLowerCase();
-      if (!hay.includes(bibFiltro.q.toLowerCase())) return false;
-    }
-    return true;
+function montarPrompt(){
+  const I = S.input;
+  return `Você é um especialista em planejamento pedagógico brasileiro, com domínio da BNCC (Base Nacional Comum Curricular) e da elaboração de "Guias de Aprendizagem" no padrão institucional de institutos técnicos estaduais.
+
+Gere o conteúdo de um Guia de Aprendizagem com os seguintes dados:
+- IEMA Pleno: ${I.pleno || '(não informado)'}
+- Curso: ${I.curso || '(não informado)'}
+- Professor(a): ${I.professor || '(não informado)'}
+- Componente curricular: ${I.componente || '(não informado)'}
+- Período/Bimestre: ${I.periodo || '(não informado)'}
+- Série/Ano: ${I.serie || '(não informado)'}
+- Área de conhecimento (BNCC): ${I.area}
+- Tema/objeto de conhecimento central do bimestre: ${I.tema || '(defina um tema coerente com o componente curricular informado)'}
+- Número total de aulas no período: ${I.numAulas}
+- Aulas por semana: ${I.aulasPorSemana}
+${I.competenciasGeraisNums ? `- Competências gerais BNCC a priorizar: ${I.competenciasGeraisNums}` : '- Escolha você mesmo de 2 a 4 competências gerais BNCC pertinentes ao tema.'}
+${I.bibliografiaBase ? `- Bibliografia/livro didático já em uso: ${I.bibliografiaBase}` : ''}
+${I.contexto ? `- Contexto/observações do professor: ${I.contexto}` : ''}
+
+Regras importantes:
+1. Responda SOMENTE com as seções abaixo, cada uma iniciada exatamente por "### <chave>" em uma linha própria, sem markdown (sem **negrito**, sem #, sem numeração de tópicos).
+2. Escreva em português do Brasil, registro formal e técnico-pedagógico, no mesmo estilo de um documento oficial de secretaria de educação.
+3. Só cite normas técnicas, legislação, códigos BNCC específicos ou referências bibliográficas se tiver razoável confiança de que existem e estão corretos; caso contrário, escreva de forma genérica ou marque "(a verificar)" em vez de inventar uma citação.
+4. Nas tabelas, use exatamente o separador " | " entre colunas, uma linha por registro, sem linha de cabeçalho.
+5. A soma da coluna "Nº de aulas" em objetosConhecimento e o número de linhas em aulasDetalhe devem ser exatamente ${I.numAulas}.
+
+${especificacaoSecoes()}`;
+}
+
+async function chamarGeminiAPI(prompt, key, model){
+  key = key.trim();
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+  const payload = {contents:[{role:'user', parts:[{text:prompt}]}], generationConfig:{temperature:0.6, maxOutputTokens:8192}};
+  const res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+  if (!res.ok) { const err = await res.json().catch(()=>({})); throw new Error(err.error?.message || `Status HTTP ${res.status}`); }
+  const data = await res.json();
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!text) throw new Error('Resposta vazia da API (a IA pode ter sido bloqueada por segurança — tente novamente).');
+  return text;
+}
+
+async function chamarOpenAICompativel(prompt, key, baseUrl, model){
+  key = key.trim();
+  const res = await fetch(`${baseUrl}/chat/completions`, {
+    method:'POST',
+    headers:{'Content-Type':'application/json', 'Authorization':`Bearer ${key}`},
+    body: JSON.stringify({model, messages:[{role:'user', content:prompt}], temperature:0.6, max_tokens:6000})
   });
+  if (!res.ok) { const err = await res.json().catch(()=>({})); throw new Error(err.error?.message || `Status HTTP ${res.status}`); }
+  const data = await res.json();
+  const text = data.choices?.[0]?.message?.content;
+  if (!text) throw new Error('Resposta vazia da API.');
+  return text;
 }
-function renderArtigoDetail(a){
-  const el = document.getElementById('biblioteca-detail');
-  if (!a){ el.innerHTML = '<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm text-on-surface-variant font-body-sm">Selecione um artigo à esquerda para ver o fichamento completo.</div>'; return; }
-  el.innerHTML = `
-    <div class="bg-surface-container-lowest rounded-xl shadow-md p-space-lg flex flex-col gap-space-md">
-      <div class="flex items-start justify-between gap-space-sm">
-        <div>
-          <div class="flex items-center gap-space-xs mb-1">
-            <span class="px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-label-code text-caption font-bold">Qualis ${esc(a.qualis)}</span>
-            <span class="px-2 py-0.5 rounded bg-surface-container-high text-primary font-label-code text-caption">${esc(a.relevancia)}</span>
-          </div>
-          <h2 class="font-headline-sm text-headline-sm text-primary">${esc(a.titulo)}</h2>
-          <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">${esc(a.autoresText)} • ${esc(a.venue)} (${esc(a.ano)})</p>
-        </div>
-        <div class="flex items-center gap-1 shrink-0">
-          <button id="btn-edit-artigo" class="p-2 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-primary" title="Editar título, autores, síntese e demais campos deste artigo"><span class="material-symbols-outlined text-lg">edit_note</span></button>
-          <button id="btn-delete-artigo" class="p-2 rounded-lg bg-surface-container-high hover:bg-error-container text-error" title="Excluir permanentemente este artigo e seu fichamento (não pode ser desfeito)"><span class="material-symbols-outlined text-lg">delete</span></button>
-        </div>
-      </div>
-      <div class="grid grid-cols-3 gap-space-sm">
-        <div class="bg-surface-container-low p-space-sm rounded-xl"><span class="font-caption text-caption text-on-surface-variant block">Status</span><span class="font-label-tag text-label-tag text-primary">${esc(a.status)} (${a.progresso}%)</span></div>
-        <div class="bg-surface-container-low p-space-sm rounded-xl"><span class="font-caption text-caption text-on-surface-variant block">Citações extraídas</span><span class="font-label-tag text-label-tag text-primary">${esc(a.citacoesExtraidas||0)}</span></div>
-        <div class="bg-surface-container-low p-space-sm rounded-xl"><span class="font-caption text-caption text-on-surface-variant block">DOI</span><span class="font-label-code text-caption text-primary truncate block">${esc(a.doi)||'—'}</span></div>
-      </div>
-      ${a.sintese ? `<div><h4 class="font-headline-sm text-body-lg text-primary mb-1">Síntese Analítica</h4><p class="font-body-md text-body-md bg-surface-container-low p-space-md rounded-xl">${esc(a.sintese)}</p></div>` : ''}
-      ${(a.citacoes||[]).length ? `<div><h4 class="font-headline-sm text-body-lg text-primary mb-1">Citações Diretas</h4><div class="space-y-space-xs">${a.citacoes.map(c=>`<blockquote class="bg-surface-container-low p-space-sm rounded-xl italic border-l-2 border-secondary-container"><span class="font-label-code text-caption text-secondary block mb-1">p. ${esc(c.pagina)}</span>${esc(c.trecho)}</blockquote>`).join('')}</div></div>` : ''}
-      ${a.aplicacaoProduto ? `<div><h4 class="font-headline-sm text-body-lg text-primary mb-1">Aplicação no Produto</h4><p class="font-body-sm text-body-sm bg-surface-container-low p-space-sm rounded-xl">${esc(a.aplicacaoProduto)}</p></div>` : ''}
-      ${a.metodologia ? `<div><h4 class="font-headline-sm text-body-lg text-primary mb-1">Metodologia</h4><p class="font-body-sm text-body-sm bg-surface-container-low p-space-sm rounded-xl">${esc(a.metodologia)}</p></div>` : ''}
-      <div class="flex items-center justify-between pt-space-xs bg-surface-container-low px-space-sm py-1.5 rounded-lg">
-        <span class="font-label-code text-caption text-on-surface-variant">@${esc(a.bibtexKey)}</span>
-        <button id="btn-copy-bibtex-one" title="Copiar a entrada BibTeX deste artigo para a área de transferência" class="font-label-tag text-caption text-secondary hover:underline flex items-center gap-1"><span class="material-symbols-outlined text-sm">content_copy</span>Copiar BibTeX</button>
-      </div>
-    </div>`;
-  document.getElementById('btn-edit-artigo').addEventListener('click', ()=> openArtigoModal(a.id));
-  document.getElementById('btn-delete-artigo').addEventListener('click', ()=> deleteArtigo(a.id));
-  document.getElementById('btn-copy-bibtex-one').addEventListener('click', ()=>{
-    navigator.clipboard.writeText(toBibtex(a)).then(()=> toast('Entrada BibTeX copiada.'));
+
+async function chamarClaudeAPI(prompt, key, model){
+  key = key.trim();
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{'Content-Type':'application/json', 'x-api-key':key, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true'},
+    body: JSON.stringify({model, max_tokens:6000, temperature:0.6, messages:[{role:'user', content:prompt}]})
   });
-}
-function renderBiblioteca(){
-  const allQualis = [...new Set(state.artigos.map(a=>a.qualis))];
-  const qualisSel = document.getElementById('bib-qualis');
-  const curQualis = qualisSel.value;
-  qualisSel.innerHTML = '<option value="all">Qualquer Qualis</option>' + allQualis.map(q=>`<option value="${esc(q)}">${esc(q)}</option>`).join('');
-  qualisSel.value = curQualis || 'all';
-
-  const allTags = [...new Set(state.artigos.flatMap(a=>a.tags||[]))];
-  document.getElementById('bib-tags').innerHTML = allTags.map(t=>`
-    <button class="tag-chip shrink-0 px-2.5 py-0.5 rounded-full font-label-tag text-label-tag transition-colors ${bibFiltro.tag===t ? 'bg-primary-container text-on-primary' : 'bg-surface-container-high text-on-surface hover:bg-surface-container-highest'}" data-tag="${esc(t)}" title="Clique para filtrar pela tag &quot;${esc(t)}&quot;; clique de novo para remover o filtro">${esc(t)}</button>
-  `).join('');
-  document.querySelectorAll('.tag-chip').forEach(b=> b.addEventListener('click', ()=>{
-    bibFiltro.tag = bibFiltro.tag === b.dataset.tag ? null : b.dataset.tag;
-    renderBiblioteca();
-  }));
-
-  const list = filteredArtigos();
-  document.getElementById('bib-counter').textContent = `Mostrando ${list.length} de ${state.artigos.length} artigos`;
-  document.getElementById('biblioteca-list').innerHTML = list.map(a=>`
-    <article class="artigo-card p-space-md rounded-xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all cursor-pointer relative overflow-hidden ${selectedArtigoId===a.id ? 'ring-2 ring-secondary-container' : ''}" data-id="${esc(a.id)}" title="Clique para ver e editar o fichamento completo deste artigo">
-      <div class="flex flex-wrap items-center gap-1.5 mb-1">
-        <span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-code text-caption font-semibold">Qualis ${esc(a.qualis)}</span>
-        <span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface font-label-code text-caption">${esc(a.status)}</span>
-      </div>
-      <h3 class="font-headline-sm text-headline-sm text-primary mb-1 leading-snug">${esc(a.titulo)}</h3>
-      <p class="font-body-sm text-body-sm text-on-surface-variant mb-1">${esc(a.autoresText)} (${esc(a.ano)})</p>
-      <div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden"><div class="bg-secondary-container h-full rounded-full" style="width:${a.progresso}%"></div></div>
-    </article>`).join('') || '<p class="font-body-sm text-on-surface-variant p-space-md">Nenhum artigo corresponde aos filtros.</p>';
-  document.querySelectorAll('.artigo-card').forEach(c=> c.addEventListener('click', ()=>{
-    selectedArtigoId = c.dataset.id;
-    renderBiblioteca();
-  }));
-  const selected = selectedArtigoId ? state.artigos.find(a=>a.id===selectedArtigoId) : null;
-  renderArtigoDetail(selected);
-}
-document.getElementById('bib-search').addEventListener('input', e=>{ bibFiltro.q = e.target.value; renderBiblioteca(); });
-document.getElementById('bib-status').addEventListener('change', e=>{ bibFiltro.status = e.target.value; renderBiblioteca(); });
-document.getElementById('bib-qualis').addEventListener('change', e=>{ bibFiltro.qualis = e.target.value; renderBiblioteca(); });
-document.getElementById('global-search').addEventListener('keydown', e=>{
-  if (e.key !== 'Enter') return;
-  bibFiltro.q = e.target.value;
-  document.getElementById('bib-search').value = e.target.value;
-  showSection('biblioteca'); renderBiblioteca();
-});
-
-// ---------- Matriz ----------
-const MODULOS = [['all','Todos os Módulos'],['m1','Módulo 1'],['m2','Módulo 2'],['m3','Módulo 3']];
-const TIPOS = [['all','Todos'],['RF','Funcional'],['RNF','Não-Funcional'],['DEC','Decisão Arq.']];
-const STATUSES = ['Implementado','Em Validação','Modelado no Backlog'];
-const mtzFiltro = {q:'', modulo:'all', tipo:'all', statuses: new Set(STATUSES)};
-function renderMatrizFilters(){
-  document.getElementById('mtz-modulos').innerHTML = MODULOS.map(([v,l])=>`
-    <button class="mtz-modulo-btn text-left px-space-sm py-1.5 rounded-lg font-body-sm text-body-sm ${mtzFiltro.modulo===v?'bg-primary-container text-on-primary':'text-on-surface-variant hover:bg-surface-container-low'}" data-v="${v}" title="Mostrar apenas requisitos de: ${esc(l)}">${esc(l)}</button>`).join('');
-  document.getElementById('mtz-tipos').innerHTML = TIPOS.map(([v,l])=>`
-    <button class="mtz-tipo-btn px-space-sm py-1 rounded-lg font-body-sm text-body-sm ${mtzFiltro.tipo===v?'bg-surface-container-high text-primary font-semibold':'bg-surface-container text-on-surface-variant'}" data-v="${v}" title="Filtrar por tipo: ${esc(l)}">${esc(l)}</button>`).join('');
-  document.getElementById('mtz-status').innerHTML = STATUSES.map(s=>`
-    <label class="flex items-center gap-space-xs p-1 rounded hover:bg-surface-container-low cursor-pointer" title="Mostrar/ocultar requisitos com status &quot;${esc(s)}&quot;">
-      <input type="checkbox" class="mtz-status-check" value="${esc(s)}" ${mtzFiltro.statuses.has(s)?'checked':''}> <span class="font-body-sm text-body-sm">${esc(s)}</span>
-    </label>`).join('');
-  document.querySelectorAll('.mtz-modulo-btn').forEach(b=> b.addEventListener('click', ()=>{ mtzFiltro.modulo=b.dataset.v; renderMatriz(); }));
-  document.querySelectorAll('.mtz-tipo-btn').forEach(b=> b.addEventListener('click', ()=>{ mtzFiltro.tipo=b.dataset.v; renderMatriz(); }));
-  document.querySelectorAll('.mtz-status-check').forEach(c=> c.addEventListener('change', ()=>{
-    if (c.checked) mtzFiltro.statuses.add(c.value); else mtzFiltro.statuses.delete(c.value);
-    renderMatriz();
-  }));
-}
-document.getElementById('mtz-search').addEventListener('input', e=>{ mtzFiltro.q = e.target.value; renderMatriz(); });
-function renderMatriz(){
-  renderMatrizFilters();
-  const total = state.requisitos.length;
-  const impl = state.requisitos.filter(r=>r.status==='Implementado').length;
-  document.getElementById('matriz-cobertura').textContent = total ? Math.round(impl/total*100)+'%' : '—';
-
-  const list = state.requisitos.filter(r=>{
-    if (mtzFiltro.modulo!=='all' && r.modulo!==mtzFiltro.modulo) return false;
-    if (mtzFiltro.tipo!=='all' && r.tipo!==mtzFiltro.tipo) return false;
-    if (!mtzFiltro.statuses.has(r.status)) return false;
-    if (mtzFiltro.q){
-      const hay = [r.codigo,r.titulo,r.descricao].join(' ').toLowerCase();
-      if (!hay.includes(mtzFiltro.q.toLowerCase())) return false;
-    }
-    return true;
-  });
-  document.getElementById('matriz-list').innerHTML = list.map(r=>{
-    const artigo = r.artigoId ? state.artigos.find(a=>a.id===r.artigoId) : null;
-    return `
-    <article class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
-      <div class="flex flex-wrap items-center justify-between gap-space-sm mb-space-xs">
-        <div class="flex flex-wrap items-center gap-space-xs">
-          <span class="font-label-code text-caption px-2 py-0.5 rounded bg-primary text-on-primary font-bold">${esc(r.codigo)}</span>
-          <span class="font-caption text-caption text-on-surface-variant">${esc(r.modulo.toUpperCase())} • ${esc(r.tipo)}</span>
-        </div>
-        <span class="font-label-tag text-caption px-2.5 py-0.5 rounded-full font-semibold ${r.status==='Implementado'?'bg-tertiary-fixed text-on-tertiary-fixed':(r.status==='Em Validação'?'bg-secondary-fixed text-on-secondary-fixed':'bg-surface-container-highest text-on-surface-variant')}">${esc(r.status)}</span>
-      </div>
-      <h3 class="font-headline-sm text-headline-sm text-primary font-semibold">${esc(r.titulo)}</h3>
-      <p class="font-body-md text-body-md text-on-surface-variant mt-0.5 mb-space-sm">${esc(r.descricao)}</p>
-      <div class="bg-surface-container-low p-space-sm rounded-lg">
-        ${artigo ? `
-          <span class="font-caption text-caption text-on-surface-variant uppercase tracking-wider font-semibold block mb-1">Evidência: ${esc(artigo.autoresText)} (${esc(artigo.ano)})</span>
-          <p class="font-body-sm text-body-sm text-on-surface">${esc(r.justificativa)}</p>
-        ` : `<p class="font-body-sm text-body-sm text-on-surface-variant italic">Sem evidência vinculada.</p>`}
-      </div>
-      <div class="flex items-center justify-between pt-space-xs mt-space-xs">
-        <span class="font-caption text-caption text-on-surface-variant">Capítulo: ${esc(r.capitulo)||'—'}</span>
-        <div class="flex items-center gap-space-xs">
-          <button class="btn-edit-req font-label-tag text-caption text-secondary hover:underline" data-id="${esc(r.id)}" title="Editar este requisito ou trocar o artigo vinculado">Editar</button>
-          <button class="btn-delete-req font-label-tag text-caption text-error hover:underline" data-id="${esc(r.id)}" title="Excluir permanentemente este requisito (não pode ser desfeito)">Excluir</button>
-        </div>
-      </div>
-    </article>`;
-  }).join('') || '<p class="font-body-sm text-on-surface-variant">Nenhum requisito corresponde aos filtros.</p>';
-  document.querySelectorAll('.btn-edit-req').forEach(b=> b.addEventListener('click', ()=> openRequisitoModal(b.dataset.id)));
-  document.querySelectorAll('.btn-delete-req').forEach(b=> b.addEventListener('click', ()=> deleteRequisito(b.dataset.id)));
+  if (!res.ok) { const err = await res.json().catch(()=>({})); throw new Error(err.error?.message || `Status HTTP ${res.status}`); }
+  const data = await res.json();
+  const text = data.content?.[0]?.text;
+  if (!text) throw new Error('Resposta vazia da API.');
+  return text;
 }
 
-// ---------- Síntese ----------
-function toBibtex(a){
-  const type = a.venue ? 'article' : 'misc';
-  let s = `@${type}{${a.bibtexKey},\n  author = {${a.autoresText}},\n  title = {${a.titulo}},\n`;
-  if (a.venue) s += `  journal = {${a.venue}},\n`;
-  s += `  year = {${a.ano}}`;
-  if (a.doi) s += `,\n  doi = {${a.doi}}`;
-  s += `\n}`;
-  return s;
+// Chama o provedor selecionado — cada "tipo" tem seu formato de request/response próprio.
+async function chamarIA(prompt){
+  const p = PROVEDORES[S.config.provider];
+  const key = S.config.apiKey, model = S.config.model;
+  if (p.tipo === 'gemini') return chamarGeminiAPI(prompt, key, model);
+  if (p.tipo === 'claude') return chamarClaudeAPI(prompt, key, model);
+  return chamarOpenAICompativel(prompt, key, p.baseUrl, model);
 }
-function toAbnt(a){
-  let s = `${a.autoresText.toUpperCase()}. ${a.titulo}. `;
-  if (a.venue) s += `${a.venue}, `;
-  s += `${a.ano}.`;
-  if (a.doi) s += ` DOI: ${a.doi}.`;
-  return s;
-}
-let sinteseTab = 'abnt';
-function renderSintese(){
-  document.getElementById('export-abnt').textContent = state.artigos.map(toAbnt).join('\n\n') || 'Nenhum artigo cadastrado ainda.';
-  document.getElementById('export-bibtex').textContent = state.artigos.map(toBibtex).join('\n\n') || '% Nenhum artigo cadastrado ainda.';
-}
-function switchSinteseTab(tab){
-  sinteseTab = tab;
-  const abntOn = tab === 'abnt';
-  document.getElementById('tab-btn-abnt').className = 'py-1.5 px-space-md rounded-md font-bold ' + (abntOn ? 'bg-surface-container-lowest text-primary shadow-xs' : 'text-on-surface-variant');
-  document.getElementById('tab-btn-bibtex').className = 'py-1.5 px-space-md rounded-md font-bold ' + (!abntOn ? 'bg-surface-container-lowest text-primary shadow-xs' : 'text-on-surface-variant');
-  document.getElementById('export-abnt').hidden = !abntOn;
-  document.getElementById('export-bibtex').hidden = abntOn;
-}
-document.getElementById('tab-btn-abnt').addEventListener('click', ()=> switchSinteseTab('abnt'));
-document.getElementById('tab-btn-bibtex').addEventListener('click', ()=> switchSinteseTab('bibtex'));
-document.getElementById('btn-copy-export').addEventListener('click', ()=>{
-  const text = sinteseTab === 'abnt' ? document.getElementById('export-abnt').textContent : document.getElementById('export-bibtex').textContent;
-  navigator.clipboard.writeText(text).then(()=> toast('Referências copiadas para a área de transferência.'));
-});
-document.getElementById('btn-print-export').addEventListener('click', ()=> window.print());
 
-// ---------- Backup (exportar/importar .json) — para usar em outro aparelho ----------
-document.getElementById('btn-export-json').addEventListener('click', async ()=>{
-  const filename = `profcomp-backup-${new Date().toISOString().slice(0,10)}.json`;
-  const json = JSON.stringify(state, null, 2);
-  if (downloadsCap) {
-    try {
-      await downloadsCap.save({filename, data: json});
-      toast('Backup baixado. Leve este arquivo para outro aparelho e use "Importar backup" lá.');
-    } catch (err) {
-      if (err && err.code === 'declined') return;
-      console.error(err);
-      toast('Não foi possível baixar o backup agora.');
-    }
-    return;
-  }
-  const blob = new Blob([json], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-  toast('Backup baixado. Leve este arquivo para outro aparelho e use "Importar backup" lá.');
-});
-document.getElementById('btn-import-json').addEventListener('click', ()=> document.getElementById('import-file-input').click());
-document.getElementById('import-file-input').addEventListener('change', e=>{
-  const file = e.target.files[0];
-  e.target.value = '';
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = async () => {
-    try {
-      const parsed = JSON.parse(reader.result);
-      if (!Array.isArray(parsed.artigos) || !Array.isArray(parsed.requisitos)) throw new Error('formato inesperado');
-      if (db) {
-        await wipeAll();
-        await Promise.all(parsed.artigos.map(a=> db.collection('artigos').doc(a.id || uid('a')).set(a)));
-        await Promise.all(parsed.requisitos.map(r=> db.collection('requisitos').doc(r.id || uid('r')).set(r)));
-      } else {
-        state = parsed;
-        saveLocal(); renderAll();
-      }
-      toast(`Backup importado: ${parsed.artigos.length} artigos e ${parsed.requisitos.length} requisitos.`);
-    } catch (err) {
-      console.error(err);
-      toast('Não foi possível importar: o arquivo não é um backup válido deste app.');
-    }
-  };
-  reader.readAsText(file);
-});
-
-// ---------- Reset ----------
-document.getElementById('btn-reset-data').addEventListener('click', async ()=>{
-  if (!confirm('Isso apaga todos os artigos e requisitos salvos. Não pode ser desfeito. Continuar?')) return;
+async function testarChave(){
+  const p = PROVEDORES[S.config.provider];
+  const key = (S.config.apiKey || '').trim();
+  const el = $('#statusChave');
+  if (!key) { el.textContent = 'Cole uma chave primeiro.'; el.style.color = '#b3261e'; return; }
+  el.textContent = 'Testando...'; el.style.color = '';
   try {
-    await wipeAll();
-    toast('Dados reiniciados.');
-  } catch (err) {
-    console.error(err);
-    toast('Não foi possível reiniciar agora. Verifique a conexão e tente novamente.');
+    let r;
+    if (p.tipo === 'gemini') r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(key)}`);
+    else if (p.tipo === 'claude') r = await fetch('https://api.anthropic.com/v1/messages', {method:'POST', headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'}, body:JSON.stringify({model:S.config.model, max_tokens:1, messages:[{role:'user', content:'oi'}]})});
+    else r = await fetch(`${p.baseUrl}/models`, {headers:{'Authorization':`Bearer ${key}`}});
+    if (!r.ok) { const e = await r.json().catch(()=>({})); throw new Error(e.error?.message || `Status HTTP ${r.status}`); }
+    el.textContent = '✅ Chave válida!'; el.style.color = '#1a7d3a';
+  } catch (e) {
+    el.textContent = '❌ ' + e.message; el.style.color = '#b3261e';
+  }
+}
+$('#testarChave').addEventListener('click', testarChave);
+
+function parseSecoesIA(texto){
+  const re = /^###\s*([A-Za-z0-9_]+)\s*$/gm;
+  const marcas = [];
+  let m;
+  while ((m = re.exec(texto))) marcas.push({chave:m[1], fim:re.lastIndex});
+  const out = {};
+  marcas.forEach((mk, i) => {
+    const inicio = mk.fim;
+    const fimBloco = i+1 < marcas.length ? marcas[i+1].fim - marcas[i+1].chave.length - 4 : texto.length;
+    out[mk.chave] = texto.slice(inicio, fimBloco).trim();
+  });
+  return out;
+}
+
+const ERRO_TRANSITORIO = /overloaded|high demand|503|429|rate limit|unavailable/i;
+async function chamarComRetry(fn, tentativas = 3){
+  for (let i = 1; i <= tentativas; i++){
+    try { return await fn(); }
+    catch (e) {
+      if (i === tentativas || !ERRO_TRANSITORIO.test(e.message)) throw e;
+      $('#status').textContent = `A IA está sobrecarregada — tentando de novo (${i}/${tentativas - 1})...`;
+      await new Promise(r => setTimeout(r, 3000 * i));
+    }
+  }
+}
+
+$('#gerar').addEventListener('click', async () => {
+  if (!S.config.apiKey) { alert('Informe sua chave de API em "Configuração de IA" antes de gerar.'); $('#cfgbox').open = true; return; }
+  const btn = $('#gerar');
+  btn.disabled = true;
+  $('#status').textContent = 'Gerando com IA — isso pode levar até 1 minuto...';
+  try {
+    const prompt = montarPrompt();
+    const resposta = await chamarComRetry(() => chamarIA(prompt));
+    const parsed = parseSecoesIA(resposta);
+    let preenchidas = 0;
+    SECTION_DEFS.forEach(s => { if (parsed[s.key] !== undefined && parsed[s.key] !== '') { S.sections[s.key] = parsed[s.key]; preenchidas++; } });
+    preencherForm();
+    atualizar();
+    $('#status').textContent = preenchidas > 0
+      ? `Guia gerado (${preenchidas}/${SECTION_DEFS.length} seções preenchidas) — revise os campos antes de baixar o PDF.`
+      : 'A IA respondeu em formato inesperado — tente gerar novamente.';
+  } catch (e) {
+    $('#status').textContent = '';
+    alert('Erro ao gerar com IA: ' + e.message);
+  } finally {
+    btn.disabled = false;
   }
 });
 
-// ---------- Boot ----------
-function renderAll(){ renderDashboard(); renderBiblioteca(); renderMatriz(); renderSintese(); }
-async function initPersistence(){
-  const hasClaude = window.claude && typeof window.claude.use === 'function';
-  try { if (hasClaude) db = await window.claude.use('db'); } catch(e) { db = null; }
-  try { if (hasClaude) downloadsCap = await window.claude.use('downloads'); } catch(e) { downloadsCap = null; }
-  const statusEl = document.getElementById('storage-status');
-  const resetBtn = document.getElementById('btn-reset-data');
-  if (db) {
-    if (statusEl) statusEl.textContent = 'Sincronizado com sua conta Claude — os mesmos dados aparecem em qualquer aparelho';
-    if (resetBtn) resetBtn.textContent = 'Apagar todos os dados';
-    db.collection('artigos').onSnapshot(snap=>{
-      state.artigos = snap.docs.map(d=>({id:d.id, ...d.data()}));
-      renderAll();
-    }, err=> console.warn('db artigos:', err));
-    db.collection('requisitos').onSnapshot(snap=>{
-      state.requisitos = snap.docs.map(d=>({id:d.id, ...d.data()}));
-      renderAll();
-    }, err=> console.warn('db requisitos:', err));
-  } else {
-    if (statusEl) statusEl.textContent = 'Dados salvos apenas neste navegador — use Exportar/Importar backup para levar a outro aparelho';
-    if (resetBtn) resetBtn.textContent = 'Apagar todos os dados locais';
-    state = loadLocal();
-    renderAll();
-  }
-  switchSinteseTab('abnt');
-  showSection(location.hash.slice(1) || 'dashboard');
-}
-initPersistence();
+// ---------- Arquivo / impressão ----------
+const baixar = (nome, texto, tipo) => {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([texto], {type:tipo}));
+  a.download = nome;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
+$('#pdf').addEventListener('click', () => prev.contentWindow.print());
+$('#expGuia').addEventListener('click', () => {
+  const nome = [S.input.componente, S.input.serie, S.input.periodo].filter(Boolean).join('_').replace(/[^\w-]+/g,'_') || 'guia-aprendizagem';
+  baixar(`${nome}.json`, JSON.stringify(S), 'application/json');
+});
+$('#impGuia').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try { S = {...PADRAO(), ...JSON.parse(await f.text())}; S.config = {...PADRAO().config, ...(S.config||{})}; S.input = {...PADRAO().input, ...(S.input||{})}; S.sections = {...PADRAO().sections, ...(S.sections||{})}; }
+  catch { alert('Arquivo inválido.'); return; }
+  e.target.value = '';
+  preencherForm(); atualizar();
+});
+$('#nova').addEventListener('click', () => {
+  if (!confirm('Começar um guia novo? O atual será descartado (salve o .json antes, se quiser).')) return;
+  const cfg = S.config;
+  S = {...PADRAO(), config: cfg};
+  preencherForm(); atualizar();
+});
 
-// Autoteste mínimo do parser de BibTeX (rodar com ?selftest na URL).
-function _selftest(){
-  const sample = "@article{doe2020test, title={A Test}, author={Doe, J.}, year={2020}, journal={J. Test}}";
-  const r = parseBibtex(sample);
-  console.assert(r.titulo === 'A Test', 'parseBibtex: titulo falhou', r);
-  console.assert(r.ano === '2020', 'parseBibtex: ano falhou', r);
-  console.assert(r.bibtexKey === 'doe2020test', 'parseBibtex: key falhou', r);
-  console.log('selftest ok');
-}
-if (location.search.includes('selftest')) _selftest();
-
-})();
+montarSelectProvedor();
+montarEditorSecoes();
+preencherForm();
+atualizar();
 </script>
 </body>
 </html>
