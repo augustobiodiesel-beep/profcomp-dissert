@@ -213,7 +213,7 @@ const PROVEDORES = {
 
 // ---------- Definição das seções geradas por IA ----------
 const SECTION_DEFS = [
-  {key:'justificativa', label:'Justificativa', type:'text', hint:'2 a 4 parágrafos justificando a relevância do tema para a BNCC, para o mundo do trabalho e para a formação cidadã, no estilo de um documento oficial de secretaria de educação, com citações (AUTOR, ano) quando fizer sentido.'},
+  {key:'justificativa', label:'Justificativa', type:'text', hint:'texto robusto e bem fundamentado, de 5 a 7 parágrafos (cada um com 4 a 6 linhas, cerca de 700 a 900 palavras no total), no estilo de um documento oficial de secretaria de educação. Estruture assim: (1) contextualização e relevância do tema para o componente curricular e para a série; (2) articulação com a BNCC (competências gerais, competência específica da área e habilidades mobilizadas); (3) conexão com o mundo do trabalho, com o itinerário/curso técnico e com o projeto de vida do estudante; (4) contribuição para a formação cidadã, o protagonismo juvenil, a ciência, a tecnologia e a sustentabilidade; (5) justificativa metodológica (metodologias ativas, interdisciplinaridade, avaliação formativa e recomposição das aprendizagens); (6) fechamento retomando os resultados esperados no bimestre. Use citações (AUTOR, ano) somente quando houver razoável confiança de que existem.'},
   {key:'competenciasGerais', label:'Competências Gerais (BNCC)', type:'table', cols:['Código','Texto da competência'], hint:'uma linha por competência geral da BNCC mobilizada (código de 1 a 10 e o texto oficial ou uma paráfrase fiel).'},
   {key:'competenciaEspecifica', label:'Competência(s) Específica(s) da área', type:'text', hint:'texto da(s) competência(s) específica(s) da área de conhecimento informada, no padrão "Competência específica N de <área>: <texto>".'},
   {key:'habilidades', label:'Habilidades (BNCC)', type:'table', cols:['Código','Texto da habilidade'], hint:'uma linha por habilidade BNCC mobilizada no bimestre (código, ex. EM13CNT104, e o texto oficial ou uma paráfrase fiel).'},
@@ -291,6 +291,18 @@ p.vazio{color:#888;font-style:italic}
 .center{text-align:center}
 .small{font-size:8.8pt;color:#333}
 .section-wrap{margin-top:-1px}
+html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;color-adjust:exact}
+thead{display:table-header-group}
+@media print{
+  html,body{height:auto!important;overflow:visible!important;background:#fff!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  body{padding:0!important}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
+  .title-bar,.section-bar{background:#dbe9f4!important}
+  .subhead{background:#eef3f8!important}
+  .section-bar,.subhead{break-after:avoid;page-break-after:avoid}
+  tr,img{break-inside:avoid;page-break-inside:avoid}
+  p{orphans:3;widows:3}
+}
 `;
 
 function tabelaObjetos(S){
@@ -600,7 +612,7 @@ async function chamarClaudeAPI(prompt, key, model){
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method:'POST',
     headers:{'Content-Type':'application/json', 'x-api-key':key, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true'},
-    body: JSON.stringify({model, max_tokens:6000, temperature:0.6, messages:[{role:'user', content:prompt}]})
+    body: JSON.stringify({model, max_tokens:8192, temperature:0.6, messages:[{role:'user', content:prompt}]})
   });
   if (!res.ok) { const err = await res.json().catch(()=>({})); throw new Error(err.error?.message || `Status HTTP ${res.status}`); }
   const data = await res.json();
@@ -695,7 +707,26 @@ const baixar = (nome, texto, tipo) => {
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 };
-$('#pdf').addEventListener('click', () => prev.contentWindow.print());
+// Imprime/baixa o PDF a partir de um iframe oculto com a altura total do documento,
+// para que TODAS as páginas saiam (o iframe de prévia tem altura limitada) e com as cores originais.
+$('#pdf').addEventListener('click', () => {
+  const f = document.createElement('iframe');
+  f.setAttribute('aria-hidden', 'true');
+  f.style.cssText = 'position:fixed;left:-10000px;top:0;width:210mm;height:297mm;border:0;visibility:hidden';
+  const limpar = () => setTimeout(() => f.remove(), 1500);
+  f.onload = async () => {
+    const w = f.contentWindow, d = f.contentDocument;
+    try {
+      if (d.fonts && d.fonts.ready) await d.fonts.ready;
+      await Promise.all([...d.images].map(img => img.complete ? null : new Promise(r => { img.onload = img.onerror = r; })));
+    } catch {}
+    f.style.height = Math.max(d.documentElement.scrollHeight, d.body.scrollHeight) + 'px';
+    w.addEventListener('afterprint', limpar);
+    setTimeout(() => { w.focus(); w.print(); }, 250);
+  };
+  f.srcdoc = montar(S);
+  document.body.appendChild(f);
+});
 $('#expGuia').addEventListener('click', () => {
   const nome = [S.input.componente, S.input.serie, S.input.periodo].filter(Boolean).join('_').replace(/[^\w-]+/g,'_') || 'guia-aprendizagem';
   baixar(`${nome}.json`, JSON.stringify(S), 'application/json');
