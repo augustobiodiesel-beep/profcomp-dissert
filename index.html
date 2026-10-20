@@ -207,7 +207,7 @@ const PROVEDORES = {
     keyUrl: 'https://console.anthropic.com/settings/keys', keyExemplo: 'sk-ant-...',
     aviso: 'Não tem uso grátis permanente — só um pequeno crédito de teste para contas novas, depois é pago.',
     passos: ['Abra console.anthropic.com/settings/keys e crie uma conta (ganha um pequeno crédito de teste).', 'Clique em "Create Key".', 'Cole no campo abaixo.'],
-    models: [{id:'claude-3-5-haiku-20241022', label:'Claude 3.5 Haiku'}]
+    models: [{id:'claude-haiku-5-5', label:'Claude Haiku 5.5'}]
   }
 };
 
@@ -259,6 +259,8 @@ try { S = {...PADRAO(), ...JSON.parse(localStorage.getItem(KEY) || 'null')}; } c
 if (!S) S = PADRAO();
 S.config = {...PADRAO().config, ...(S.config||{})};
 S.input = {...PADRAO().input, ...(S.input||{})};
+// Modelo salvo que saiu da lista (ex.: descontinuado) volta para o padrão do provedor.
+{ const p = PROVEDORES[S.config.provider] || PROVEDORES.gemini; if (!p.models.some(m => m.id === S.config.model)) S.config.model = p.models[0].id; }
 S.sections = {...PADRAO().sections, ...(S.sections||{})};
 
 // ---------- Helpers de texto ----------
@@ -584,12 +586,16 @@ ${especificacaoSecoes()}`;
 async function chamarGeminiAPI(prompt, key, model){
   key = key.trim();
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
-  const payload = {contents:[{role:'user', parts:[{text:prompt}]}], generationConfig:{temperature:0.6, maxOutputTokens:8192}};
+  const payload = {contents:[{role:'user', parts:[{text:prompt}]}], generationConfig:{temperature:0.6, maxOutputTokens:32768}};
   const res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
   if (!res.ok) { const err = await res.json().catch(()=>({})); throw new Error(err.error?.message || `Status HTTP ${res.status}`); }
   const data = await res.json();
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!text) throw new Error('Resposta vazia da API (a IA pode ter sido bloqueada por segurança — tente novamente).');
+  // Modelos com "thinking" gastam parte do limite raciocinando e podem dividir a resposta em várias partes.
+  const cand = data.candidates?.[0];
+  const text = (cand?.content?.parts || []).filter(p => !p.thought).map(p => p.text || '').join('');
+  if (!text) throw new Error(cand?.finishReason === 'MAX_TOKENS'
+    ? 'A IA atingiu o limite de tamanho da resposta antes de escrever o guia — tente novamente ou escolha outro modelo.'
+    : 'Resposta vazia da API (a IA pode ter sido bloqueada por segurança — tente novamente).');
   return text;
 }
 
@@ -598,7 +604,7 @@ async function chamarOpenAICompativel(prompt, key, baseUrl, model){
   const res = await fetch(`${baseUrl}/chat/completions`, {
     method:'POST',
     headers:{'Content-Type':'application/json', 'Authorization':`Bearer ${key}`},
-    body: JSON.stringify({model, messages:[{role:'user', content:prompt}], temperature:0.6, max_tokens:6000})
+    body: JSON.stringify({model, messages:[{role:'user', content:prompt}], temperature:0.6, max_tokens:8000})
   });
   if (!res.ok) { const err = await res.json().catch(()=>({})); throw new Error(err.error?.message || `Status HTTP ${res.status}`); }
   const data = await res.json();
@@ -612,22 +618,36 @@ async function chamarClaudeAPI(prompt, key, model){
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method:'POST',
     headers:{'Content-Type':'application/json', 'x-api-key':key, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true'},
-    body: JSON.stringify({model, max_tokens:8192, temperature:0.6, messages:[{role:'user', content:prompt}]})
+    body: JSON.stringify({model, max_tokens:16000, temperature:0.6, messages:[{role:'user', content:prompt}]})
   });
   if (!res.ok) { const err = await res.json().catch(()=>({})); throw new Error(err.error?.message || `Status HTTP ${res.status}`); }
   const data = await res.json();
-  const text = data.content?.[0]?.text;
+  const text = (data.content || []).filter(c => c.type === 'text').map(c => c.text).join('');
   if (!text) throw new Error('Resposta vazia da API.');
   return text;
 }
 
 // Chama o provedor selecionado — cada "tipo" tem seu formato de request/response próprio.
-async function chamarIA(prompt){
+async function chamarIAModelo(prompt, model){
   const p = PROVEDORES[S.config.provider];
-  const key = S.config.apiKey, model = S.config.model;
+  const key = S.config.apiKey;
   if (p.tipo === 'gemini') return chamarGeminiAPI(prompt, key, model);
   if (p.tipo === 'claude') return chamarClaudeAPI(prompt, key, model);
   return chamarOpenAICompativel(prompt, key, p.baseUrl, model);
+}
+// Se o modelo escolhido estiver sobrecarregado ou não existir/não estiver liberado para a conta
+// (ex.: modelo salvo no navegador que foi descontinuado), tenta os outros do mesmo provedor.
+const ERRO_MODELO = /not found|not supported|does not exist|deprecated|no access/i;
+async function chamarIA(prompt){
+  const p = PROVEDORES[S.config.provider];
+  const modelos = [S.config.model, ...p.models.map(m => m.id).filter(id => id !== S.config.model)];
+  for (let i = 0; i < modelos.length; i++){
+    try { return await chamarComRetry(() => chamarIAModelo(prompt, modelos[i]), i ? 2 : 3); }
+    catch (e) {
+      if (i === modelos.length - 1 || !(ERRO_TRANSITORIO.test(e.message) || ERRO_MODELO.test(e.message))) throw e;
+      $('#status').textContent = `Modelo ${modelos[i]} indisponível — tentando ${modelos[i+1]}...`;
+    }
+  }
 }
 
 async function testarChave(){
@@ -682,7 +702,7 @@ $('#gerar').addEventListener('click', async () => {
   $('#status').textContent = 'Gerando com IA — isso pode levar até 1 minuto...';
   try {
     const prompt = montarPrompt();
-    const resposta = await chamarComRetry(() => chamarIA(prompt));
+    const resposta = await chamarIA(prompt);
     const parsed = parseSecoesIA(resposta);
     let preenchidas = 0;
     SECTION_DEFS.forEach(s => { if (parsed[s.key] !== undefined && parsed[s.key] !== '') { S.sections[s.key] = parsed[s.key]; preenchidas++; } });
