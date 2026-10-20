@@ -214,9 +214,9 @@ const PROVEDORES = {
 // ---------- Definição das seções geradas por IA ----------
 const SECTION_DEFS = [
   {key:'justificativa', label:'Justificativa', type:'text', hint:'texto robusto e bem fundamentado, de 5 a 7 parágrafos (cada um com 4 a 6 linhas, cerca de 700 a 900 palavras no total), no estilo de um documento oficial de secretaria de educação. Estruture assim: (1) contextualização e relevância do tema para o componente curricular e para a série; (2) articulação com a BNCC (competências gerais, competência específica da área e habilidades mobilizadas); (3) conexão com o mundo do trabalho, com o itinerário/curso técnico e com o projeto de vida do estudante; (4) contribuição para a formação cidadã, o protagonismo juvenil, a ciência, a tecnologia e a sustentabilidade; (5) justificativa metodológica (metodologias ativas, interdisciplinaridade, avaliação formativa e recomposição das aprendizagens); (6) fechamento retomando os resultados esperados no bimestre. Use citações (AUTOR, ano) somente quando houver razoável confiança de que existem.'},
-  {key:'competenciasGerais', label:'Competências Gerais (BNCC)', type:'table', cols:['Código','Texto da competência'], hint:'uma linha por competência geral da BNCC mobilizada (código de 1 a 10 e o texto oficial ou uma paráfrase fiel).'},
+  {key:'competenciasGerais', label:'Competências Gerais (BNCC)', type:'table', cols:['Código','Texto da competência'], hint:'uma linha por competência geral da BNCC mobilizada (código de 1 a 10 e uma paráfrase fiel do texto (não copie o texto oficial palavra por palavra)).'},
   {key:'competenciaEspecifica', label:'Competência(s) Específica(s) da área', type:'text', hint:'texto da(s) competência(s) específica(s) da área de conhecimento informada, no padrão "Competência específica N de <área>: <texto>".'},
-  {key:'habilidades', label:'Habilidades (BNCC)', type:'table', cols:['Código','Texto da habilidade'], hint:'uma linha por habilidade BNCC mobilizada no bimestre (código, ex. EM13CNT104, e o texto oficial ou uma paráfrase fiel).'},
+  {key:'habilidades', label:'Habilidades (BNCC)', type:'table', cols:['Código','Texto da habilidade'], hint:'uma linha por habilidade BNCC mobilizada no bimestre (código, ex. EM13CNT104, e uma paráfrase fiel do texto (não copie o texto oficial palavra por palavra)).'},
   {key:'normasTecnicas', label:'Normas técnicas / legislação de referência', type:'text', hint:'parágrafo curto citando normas técnicas, legislação ou observações "(a verificar)" quando pertinente ao tema; pode ficar vazio se não houver nenhuma relevante.'},
   {key:'objetivosAprendizagem', label:'Objetivos de Aprendizagem', type:'lines', hint:'de 4 a 8 objetivos de aprendizagem do bimestre, um por linha, começando por verbo no infinitivo (ex.: "Identificar...", "Compreender...", "Aplicar..."), coerentes com o tema e as habilidades BNCC selecionadas.'},
   {key:'objetosConhecimento', label:'Objeto de Conhecimento (tabela de conteúdos)', type:'table', cols:['Nº','Objeto de conhecimento','Subtópicos','Nº de aulas'], hint:'uma linha por objeto de conhecimento/bloco de aulas; a soma da última coluna deve bater exatamente com o total de aulas informado.'},
@@ -595,7 +595,7 @@ async function chamarGeminiAPI(prompt, key, model){
   const text = (cand?.content?.parts || []).filter(p => !p.thought).map(p => p.text || '').join('');
   if (!text) throw new Error(cand?.finishReason === 'MAX_TOKENS'
     ? 'A IA atingiu o limite de tamanho da resposta antes de escrever o guia — tente novamente ou escolha outro modelo.'
-    : 'Resposta vazia da API (a IA pode ter sido bloqueada por segurança — tente novamente).');
+    : `Resposta vazia da API (motivo: ${cand?.finishReason || data.promptFeedback?.blockReason || 'desconhecido'}${cand?.finishReason === 'RECITATION' ? ' — a IA bloqueou por reproduzir texto oficial literalmente' : ''}). Tente novamente ou escolha outro modelo.`);
   return text;
 }
 
@@ -683,7 +683,7 @@ function parseSecoesIA(texto){
   return out;
 }
 
-const ERRO_TRANSITORIO = /overloaded|high demand|503|429|rate limit|unavailable/i;
+const ERRO_TRANSITORIO = /overloaded|high demand|503|429|rate limit|unavailable|resposta vazia/i;
 async function chamarComRetry(fn, tentativas = 3){
   for (let i = 1; i <= tentativas; i++){
     try { return await fn(); }
