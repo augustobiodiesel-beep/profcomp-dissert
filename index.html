@@ -167,9 +167,9 @@ const PROVEDORES = {
     keyUrl: 'https://aistudio.google.com/app/apikey', keyExemplo: 'AIzaSy... ou AQ...',
     passos: ['Abra aistudio.google.com/app/apikey e entre com uma conta Google (é grátis, sem cartão).', 'Clique em "Create API key" (ou "Criar chave de API").', 'Copie a chave gerada.', 'Cole no campo abaixo.'],
     models: [
-      {id:'gemini-3.6-flash', label:'Gemini 3.6 Flash (recomendado, grátis)'},
-      {id:'gemini-3.6-pro', label:'Gemini 3.6 Pro (mais lento, mais rigoroso)'},
-      {id:'gemini-2.5-flash', label:'Gemini 2.5 Flash (contas antigas)'}
+      {id:'gemini-3.8-flash', label:'Gemini 3.8 Flash (recomendado, grátis)'},
+      {id:'gemini-3.6-flash', label:'Gemini 3.6 Flash'},
+      {id:'gemini-3.6-pro', label:'Gemini 3.6 Pro (mais lento, mais rigoroso)'}
     ]
   },
   deepseek: {
@@ -637,7 +637,7 @@ async function chamarIAModelo(prompt, model){
 }
 // Se o modelo escolhido estiver sobrecarregado ou não existir/não estiver liberado para a conta
 // (ex.: modelo salvo no navegador que foi descontinuado), tenta os outros do mesmo provedor.
-const ERRO_MODELO = /not found|not supported|does not exist|deprecated|no access/i;
+const ERRO_MODELO = /not found|not supported|does not exist|deprecated|no access|no longer available/i;
 async function chamarIA(prompt){
   const p = PROVEDORES[S.config.provider];
   const modelos = [S.config.model, ...p.models.map(m => m.id).filter(id => id !== S.config.model)];
